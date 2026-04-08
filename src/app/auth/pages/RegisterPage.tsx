@@ -1,8 +1,38 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 import { AuthFrame } from '../components/AuthFrame'
+import { ApiError } from '../../shared/services/ApiError'
+import { authService } from '../services/AuthService'
 
 export function RegisterPage() {
+  const [fullname, setFullname] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    setIsSubmitting(true)
+    setSuccessMessage(null)
+    setErrorMessage(null)
+
+    try {
+      const response = await authService.signUp({ fullname, email, password })
+      setSuccessMessage(response.message)
+      setFullname('')
+      setEmail('')
+      setPassword('')
+    } catch (error) {
+      const apiError = error instanceof ApiError ? error : new ApiError('Unexpected error')
+      setErrorMessage(apiError.message)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <AuthFrame
       title="Create Account"
@@ -11,7 +41,7 @@ export function RegisterPage() {
       ctaLabel="Iniciar sesión"
       ctaPath="/login"
     >
-      <form className="space-y-4" onSubmit={(event) => event.preventDefault()}>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700" htmlFor="fullName">
             Full Name
@@ -22,6 +52,9 @@ export function RegisterPage() {
             autoComplete="name"
             className="auth-input"
             placeholder="Jane Miller"
+            value={fullname}
+            onChange={(event) => setFullname(event.target.value)}
+            required
           />
         </div>
 
@@ -35,6 +68,9 @@ export function RegisterPage() {
             autoComplete="email"
             className="auth-input"
             placeholder="jane.miller@company.com"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
           />
         </div>
 
@@ -51,23 +87,33 @@ export function RegisterPage() {
             autoComplete="new-password"
             className="auth-input"
             placeholder="••••••••"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
           />
         </div>
 
+        {successMessage ? (
+          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            {successMessage}
+          </p>
+        ) : null}
+
+        {errorMessage ? (
+          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {errorMessage}
+          </p>
+        ) : null}
+
         <button
-          type="button"
+          type="submit"
           className="auth-button w-full px-5 py-2.5 text-sm font-semibold"
+          disabled={isSubmitting}
         >
-          Crear cuenta (demo)
+          {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
         </button>
 
-        <p className="text-xs text-slate-500">
-          El registro aún no está conectado a API. Esta vista es visual.
-        </p>
-
-        <Link className="inline-block text-sm text-slate-700 underline" to="/login">
-          Volver a login
-        </Link>
+        <p className="text-xs text-slate-500">Registro conectado al backend.</p>
       </form>
     </AuthFrame>
   )

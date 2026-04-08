@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 
-import { clearAuthToken } from '../../auth/services/authStorage'
+import { clearAuthSession } from '../../auth/services/authStorage'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -15,7 +15,7 @@ export function HomePage() {
           type="button"
           className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium"
           onClick={() => {
-            clearAuthToken()
+            clearAuthSession()
             navigate('/login')
           }}
         >
