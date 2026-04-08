@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { AuthFrame } from '../components/AuthFrame'
@@ -7,6 +8,7 @@ import { authService } from '../services/AuthService'
 import { setAuthSession } from '../services/authStorage'
 
 export function LoginPage() {
+  const { t } = useTranslation('auth')
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,7 +26,7 @@ export function LoginPage() {
       setAuthSession(session)
       navigate('/home')
     } catch (error) {
-      const apiError = error instanceof ApiError ? error : new ApiError('Unexpected error')
+      const apiError = error instanceof ApiError ? error : new ApiError(t('errors.unexpected'))
       setErrorMessage(apiError.message)
     } finally {
       setIsSubmitting(false)
@@ -33,23 +35,23 @@ export function LoginPage() {
 
   return (
     <AuthFrame
-      title="Welcome Back"
-      subtitle="Accede a tu espacio de investigación y seguimiento de riesgo."
-      ctaDescription="¿Aún no tienes cuenta?"
-      ctaLabel="Crear cuenta"
+      title={t('login.title')}
+      subtitle={t('login.subtitle')}
+      ctaDescription={t('login.ctaDescription')}
+      ctaLabel={t('login.ctaLabel')}
       ctaPath="/register"
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700" htmlFor="email">
-            Email
+            {t('login.emailLabel')}
           </label>
           <input
             id="email"
             type="email"
             autoComplete="email"
             className="auth-input"
-            placeholder="analyst@company.com"
+            placeholder={t('login.emailPlaceholder')}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -61,7 +63,7 @@ export function LoginPage() {
             className="text-sm font-medium text-slate-700"
             htmlFor="password"
           >
-            Contraseña
+            {t('login.passwordLabel')}
           </label>
           <input
             id="password"
@@ -81,14 +83,13 @@ export function LoginPage() {
           </p>
         ) : null}
 
-        <div className="flex items-center justify-between pt-2">
-          <p className="text-xs text-slate-500">Autenticacion conectada al backend.</p>
+        <div className="pt-2">
           <button
             type="submit"
-            className="auth-button px-5 py-2.5 text-sm font-semibold"
+            className="auth-button w-full px-5 py-2.5 text-sm font-semibold"
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Entrando...' : 'Entrar'}
+            {isSubmitting ? t('login.submitting') : t('login.submit')}
           </button>
         </div>
       </form>

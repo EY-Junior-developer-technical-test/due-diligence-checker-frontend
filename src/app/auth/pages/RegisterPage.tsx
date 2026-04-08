@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { AuthFrame } from '../components/AuthFrame'
 import { ApiError } from '../../shared/services/ApiError'
 import { authService } from '../services/AuthService'
 
 export function RegisterPage() {
+  const { t } = useTranslation('auth')
   const [fullname, setFullname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -26,7 +28,7 @@ export function RegisterPage() {
       setEmail('')
       setPassword('')
     } catch (error) {
-      const apiError = error instanceof ApiError ? error : new ApiError('Unexpected error')
+      const apiError = error instanceof ApiError ? error : new ApiError(t('errors.unexpected'))
       setErrorMessage(apiError.message)
     } finally {
       setIsSubmitting(false)
@@ -35,23 +37,23 @@ export function RegisterPage() {
 
   return (
     <AuthFrame
-      title="Create Account"
-      subtitle="Configura tu acceso para iniciar evaluaciones de due diligence."
-      ctaDescription="¿Ya tienes cuenta?"
-      ctaLabel="Iniciar sesión"
+      title={t('register.title')}
+      subtitle={t('register.subtitle')}
+      ctaDescription={t('register.ctaDescription')}
+      ctaLabel={t('register.ctaLabel')}
       ctaPath="/login"
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700" htmlFor="fullName">
-            Full Name
+            {t('register.fullnameLabel')}
           </label>
           <input
             id="fullName"
             type="text"
             autoComplete="name"
             className="auth-input"
-            placeholder="Jane Miller"
+            placeholder={t('register.fullnamePlaceholder')}
             value={fullname}
             onChange={(event) => setFullname(event.target.value)}
             required
@@ -60,14 +62,14 @@ export function RegisterPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700" htmlFor="registerEmail">
-            Email
+            {t('register.emailLabel')}
           </label>
           <input
             id="registerEmail"
             type="email"
             autoComplete="email"
             className="auth-input"
-            placeholder="jane.miller@company.com"
+            placeholder={t('register.emailPlaceholder')}
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
@@ -79,7 +81,7 @@ export function RegisterPage() {
             className="text-sm font-medium text-slate-700"
             htmlFor="registerPassword"
           >
-            Contraseña
+            {t('register.passwordLabel')}
           </label>
           <input
             id="registerPassword"
@@ -110,10 +112,8 @@ export function RegisterPage() {
           className="auth-button w-full px-5 py-2.5 text-sm font-semibold"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Creando cuenta...' : 'Crear cuenta'}
+          {isSubmitting ? t('register.submitting') : t('register.submit')}
         </button>
-
-        <p className="text-xs text-slate-500">Registro conectado al backend.</p>
       </form>
     </AuthFrame>
   )
