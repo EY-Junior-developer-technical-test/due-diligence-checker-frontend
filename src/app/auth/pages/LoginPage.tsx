@@ -1,28 +1,63 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
+import { AuthFrame } from '../components/AuthFrame'
 import { setAuthToken } from '../services/authStorage'
 
 export function LoginPage() {
   const navigate = useNavigate()
 
   return (
-    <main style={{ padding: 24, textAlign: 'left' }}>
-      <h1>Login</h1>
-      <p>Pantalla plana (placeholder).</p>
+    <AuthFrame
+      title="Welcome Back"
+      subtitle="Accede a tu espacio de investigación y seguimiento de riesgo."
+      ctaDescription="¿Aún no tienes cuenta?"
+      ctaLabel="Crear cuenta"
+      ctaPath="/register"
+    >
+      <form className="space-y-4" onSubmit={(event) => event.preventDefault()}>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700" htmlFor="email">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            autoComplete="email"
+            className="auth-input"
+            placeholder="analyst@company.com"
+          />
+        </div>
 
-      <div style={{ marginTop: 16, display: 'flex', gap: 12 }}>
-        <button
-          type="button"
-          onClick={() => {
-            setAuthToken('dev-token')
-            navigate('/home')
-          }}
-        >
-          Entrar
-        </button>
+        <div className="space-y-2">
+          <label
+            className="text-sm font-medium text-slate-700"
+            htmlFor="password"
+          >
+            Contraseña
+          </label>
+          <input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            className="auth-input"
+            placeholder="••••••••"
+          />
+        </div>
 
-        <Link to="/register">Ir a register</Link>
-      </div>
-    </main>
+        <div className="flex items-center justify-between pt-2">
+          <p className="text-xs text-slate-500">Modo demo sin API por ahora.</p>
+          <button
+            type="button"
+            className="auth-button px-5 py-2.5 text-sm font-semibold"
+            onClick={() => {
+              setAuthToken('dev-token')
+              navigate('/home')
+            }}
+          >
+            Entrar
+          </button>
+        </div>
+      </form>
+    </AuthFrame>
   )
 }

@@ -6,13 +6,14 @@ export function HomePage() {
   const navigate = useNavigate()
 
   return (
-    <main style={{ padding: 24, textAlign: 'left' }}>
-      <h1>Home</h1>
-      <p>Pantalla plana (placeholder).</p>
+    <main className="min-h-screen p-6">
+      <div className="mx-auto w-full max-w-md space-y-4 text-left">
+        <h1 className="text-2xl font-semibold">Home</h1>
+        <p className="text-sm text-slate-600">Pantalla plana (placeholder).</p>
 
-      <div style={{ marginTop: 16 }}>
         <button
           type="button"
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium"
           onClick={() => {
             clearAuthToken()
             navigate('/login')

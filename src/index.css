@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+:root {
+	--ey-yellow: #ffe600;
+	--ey-yellow-soft: #fff59d;
+	--ink-900: #111317;
+	--ink-800: #1d222b;
+	--ink-700: #2a3340;
+	--mist-100: #f3f6fb;
+	--mist-200: #e6ebf3;
+}
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: "Manrope", "Segoe UI", sans-serif;
+	color: var(--ink-900);
+	background:
+		radial-gradient(circle at 8% 12%, rgba(255, 230, 0, 0.18), transparent 42%),
+		radial-gradient(circle at 92% 88%, rgba(56, 69, 89, 0.16), transparent 38%),
+		linear-gradient(135deg, #eef2f7 0%, #f9fafc 36%, #eef2f8 100%);
+}
+
+#root {
+	min-height: 100%;
+}
+
+.auth-stage {
+	position: relative;
+	overflow: hidden;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.auth-stage::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(17, 19, 23, 0.05) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(17, 19, 23, 0.05) 1px, transparent 1px);
+	background-size: 42px 42px;
+	mask-image: radial-gradient(circle at 65% 35%, black 25%, transparent 70%);
+	pointer-events: none;
+}
+
+.auth-shell {
+	border: 1px solid rgba(29, 34, 43, 0.12);
+	background: rgba(255, 255, 255, 0.78);
+	box-shadow:
+		0 24px 60px rgba(15, 23, 42, 0.18),
+		0 1px 0 rgba(255, 255, 255, 0.85) inset;
+	backdrop-filter: blur(7px);
+}
+
+.auth-input {
+	width: 100%;
+	border-radius: 0.75rem;
+	border: 1px solid rgba(42, 51, 64, 0.22);
+	background: rgba(255, 255, 255, 0.95);
+	padding: 0.75rem 0.95rem;
+	color: var(--ink-900);
+	outline: none;
+	transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.auth-input::placeholder {
+	color: rgba(42, 51, 64, 0.52);
+}
+
+.auth-input:focus {
+	border-color: rgba(255, 230, 0, 0.95);
+	box-shadow: 0 0 0 4px rgba(255, 230, 0, 0.22);
+	transform: translateY(-1px);
+}
+
+.auth-button {
+	border-radius: 0.75rem;
+	background: linear-gradient(180deg, #1f2630 0%, #121822 100%);
+	color: #ffffff;
+	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+	box-shadow: 0 12px 24px rgba(15, 23, 42, 0.25);
+}
+
+.auth-button:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.06);
+}
+
+.auth-button:active {
+	transform: translateY(0);
+}
+
+.ey-line {
+	height: 4px;
+	width: 64px;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--ey-yellow) 0%, var(--ey-yellow-soft) 100%);
+}
+
+.reveal-up {
+	animation: reveal-up 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes reveal-up {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.985);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
