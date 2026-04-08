@@ -43,7 +43,7 @@ export function LoginPage() {
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700" htmlFor="email">
+          <label className="auth-label" htmlFor="email">
             {t('login.emailLabel')}
           </label>
           <input
@@ -59,10 +59,7 @@ export function LoginPage() {
         </div>
 
         <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-slate-700"
-            htmlFor="password"
-          >
+          <label className="auth-label" htmlFor="password">
             {t('login.passwordLabel')}
           </label>
           <input
@@ -78,7 +75,7 @@ export function LoginPage() {
         </div>
 
         {errorMessage ? (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">
             {errorMessage}
           </p>
         ) : null}

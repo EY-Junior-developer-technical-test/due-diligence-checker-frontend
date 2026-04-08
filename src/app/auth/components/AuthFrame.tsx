@@ -32,6 +32,10 @@ export function AuthFrame({
 
   return (
     <main className="auth-stage px-4 py-6 sm:px-6 sm:py-8">
+      <div className="absolute left-4 top-4 z-30 sm:left-6 sm:top-6">
+        <span className="auth-meta-pill">Forensic Session</span>
+      </div>
+
       <div className="absolute right-4 top-4 z-30 sm:right-6 sm:top-6">
         <LanguageSwitch
           value={currentLanguage}
@@ -46,36 +50,40 @@ export function AuthFrame({
       </div>
 
       <section className="relative mx-auto w-full max-w-lg overflow-hidden rounded-3xl auth-shell reveal-up">
-        <div className="pointer-events-none absolute -right-8 -top-10 h-36 w-36 rounded-full bg-[radial-gradient(circle,rgba(255,230,0,0.42)_0%,rgba(255,230,0,0)_70%)]" />
+        <div className="forensic-light-ribbons" />
 
-        <div className="relative bg-white/70 p-6 sm:p-10">
+        <div className="relative p-3 sm:p-4">
+          <div className="auth-panel p-6 sm:p-10">
           <div className="mb-8 flex items-start justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-semibold tracking-tight text-slate-950">
+              <h1 className="auth-title">
                 {title}
               </h1>
-              <p className="text-sm leading-relaxed text-slate-600">{subtitle}</p>
+              <p className="auth-subtitle text-sm">{subtitle}</p>
               <div className="ey-line" />
             </div>
 
-            <img
-              src={eyLogo}
-              alt="EY"
-              className="h-10 w-10 shrink-0 rounded-md object-contain opacity-80"
-            />
+            <div className="auth-logo-wrap">
+              <img
+                src={eyLogo}
+                alt="EY"
+                className="h-10 w-10 shrink-0 rounded-md object-contain opacity-90"
+              />
+            </div>
           </div>
 
           {children}
 
-          <p className="mt-6 text-sm text-slate-600">
+          <p className="auth-link-line mt-6 text-sm">
             {ctaDescription}{' '}
             <Link
-              className="font-semibold text-slate-900 underline decoration-[var(--ey-yellow)] underline-offset-4"
+              className="font-semibold text-slate-100 underline decoration-[var(--ey-yellow)] underline-offset-4"
               to={ctaPath}
             >
               {ctaLabel}
             </Link>
           </p>
+          </div>
         </div>
       </section>
     </main>

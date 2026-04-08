@@ -45,7 +45,7 @@ export function RegisterPage() {
     >
       <form className="space-y-4" onSubmit={onSubmit}>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700" htmlFor="fullName">
+          <label className="auth-label" htmlFor="fullName">
             {t('register.fullnameLabel')}
           </label>
           <input
@@ -61,7 +61,7 @@ export function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-700" htmlFor="registerEmail">
+          <label className="auth-label" htmlFor="registerEmail">
             {t('register.emailLabel')}
           </label>
           <input
@@ -77,10 +77,7 @@ export function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <label
-            className="text-sm font-medium text-slate-700"
-            htmlFor="registerPassword"
-          >
+          <label className="auth-label" htmlFor="registerPassword">
             {t('register.passwordLabel')}
           </label>
           <input
@@ -96,13 +93,13 @@ export function RegisterPage() {
         </div>
 
         {successMessage ? (
-          <p className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="auth-alert-success rounded-lg px-3 py-2 text-sm">
             {successMessage}
           </p>
         ) : null}
 
         {errorMessage ? (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">
             {errorMessage}
           </p>
         ) : null}
