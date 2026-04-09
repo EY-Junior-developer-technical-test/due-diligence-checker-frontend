@@ -1,0 +1,45 @@
+{
+  "header": {
+    "workspaceTag": "Inteligencia de terceros",
+    "title": "Panel de proveedores",
+    "subtitle": "Monitorea terceros y prepara evaluaciones de due diligence en un solo lugar."
+  },
+  "toolbar": {
+    "searchPlaceholder": "Buscar por razon social, nombre comercial o RUC...",
+    "addSupplier": "Anadir proveedor",
+    "addSupplierSoon": "Proximamente"
+  },
+  "table": {
+    "count": "{{count}} proveedores",
+    "empty": "No encontramos proveedores con ese criterio.",
+    "loading": "Cargando proveedores...",
+    "headers": {
+      "corporateName": "Razon social",
+      "taxIdentification": "Identificacion fiscal",
+      "phoneNumber": "Telefono",
+      "email": "Email",
+      "annualBillingAmount": "Facturacion anual",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "screening": "Screening",
+      "delete": "Eliminar"
+    }
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Pagina {{page}}"
+  },
+  "user": {
+    "fallbackName": "Analista",
+    "options": "Opciones de usuario",
+    "exit": "Salir",
+    "logout": "Cerrar sesion"
+  },
+  "errors": {
+    "loadSuppliers": "No fue posible cargar los proveedores."
+  }
+}

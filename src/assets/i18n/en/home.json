@@ -1,0 +1,45 @@
+{
+  "header": {
+    "workspaceTag": "Third-party intelligence",
+    "title": "Suppliers control panel",
+    "subtitle": "Monitor third parties and prepare due diligence assessments from one place."
+  },
+  "toolbar": {
+    "searchPlaceholder": "Search by legal name, trade name, or tax ID...",
+    "addSupplier": "Add supplier",
+    "addSupplierSoon": "Coming soon"
+  },
+  "table": {
+    "count": "{{count}} suppliers",
+    "empty": "No suppliers matched this filter.",
+    "loading": "Loading suppliers...",
+    "headers": {
+      "corporateName": "Legal name",
+      "taxIdentification": "Tax identification",
+      "phoneNumber": "Phone",
+      "email": "Email",
+      "annualBillingAmount": "Annual billing",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "screening": "Screening",
+      "delete": "Delete"
+    }
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}}"
+  },
+  "user": {
+    "fallbackName": "Analyst",
+    "options": "User options",
+    "exit": "Logout",
+    "logout": "Logout"
+  },
+  "errors": {
+    "loadSuppliers": "Unable to load suppliers."
+  }
+}
