@@ -483,6 +483,51 @@ body {
 		0 0 20px rgba(255, 230, 0, 0.3);
 }
 
+.home-delete-button {
+	border: 1px solid rgba(255, 120, 120, 0.62);
+	background: linear-gradient(162deg, rgba(255, 92, 92, 0.92), rgba(255, 138, 138, 0.78));
+	color: var(--ink-900);
+	box-shadow:
+		0 10px 24px rgba(4, 8, 14, 0.34),
+		0 0 0 1px rgba(255, 120, 120, 0.22);
+	transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.home-delete-button:hover {
+	transform: translateY(-1px);
+	filter: brightness(1.06);
+	box-shadow:
+		0 14px 28px rgba(4, 8, 14, 0.42),
+		0 0 0 1px rgba(255, 120, 120, 0.3),
+		0 0 22px rgba(255, 92, 92, 0.28),
+		0 0 46px rgba(255, 92, 92, 0.16);
+}
+
+.glass-dialog {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid rgba(220, 235, 255, 0.22);
+	background:
+		linear-gradient(145deg, rgba(18, 25, 38, 0.74), rgba(12, 17, 29, 0.64)),
+		linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0));
+	box-shadow:
+		0 34px 70px rgba(2, 8, 18, 0.62),
+		0 1px 0 rgba(255, 255, 255, 0.22) inset,
+		0 -1px 0 rgba(255, 255, 255, 0.08) inset;
+	backdrop-filter: blur(18px) saturate(120%);
+}
+
+.glass-dialog::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(124deg, rgba(255, 230, 0, 0.12), rgba(255, 230, 0, 0) 36%),
+		linear-gradient(299deg, rgba(126, 212, 255, 0.18), rgba(126, 212, 255, 0) 40%);
+	opacity: 0.9;
+	pointer-events: none;
+}
+
 button:not(:disabled),
 a,
 [role="button"] {

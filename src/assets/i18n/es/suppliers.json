@@ -45,6 +45,43 @@
       "amount": "El monto debe ser 0 o mayor.",
       "createFailed": "No fue posible crear el proveedor."
     }
+  },
+  "details": {
+    "back": "Volver",
+    "loading": "Cargando proveedor...",
+    "titleFallback": "Proveedor",
+    "subtitle": "RUC: {{taxId}}",
+    "sections": {
+      "supplier": "Datos del proveedor",
+      "representatives": "Representantes"
+    },
+    "fields": {
+      "corporateName": "Razón social",
+      "tradeName": "Nombre comercial",
+      "taxIdentification": "Identificación fiscal",
+      "phoneNumber": "Teléfono",
+      "email": "Email",
+      "webSite": "Sitio web",
+      "physicalAddress": "Dirección",
+      "country": "País",
+      "annualBillingAmount": "Facturación anual"
+    },
+    "representativeCount": "{{count}} representantes",
+    "editRepresentativeSoon": "Editar representante (próximamente).",
+    "deleteRepresentative": {
+      "title": "Eliminar representante",
+      "subtitle": "Esta acción no se puede deshacer.",
+      "metaLabel": "Rol",
+      "actions": {
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      }
+    },
+    "errors": {
+      "missingId": "Falta el id del proveedor.",
+      "loadFailed": "No fue posible cargar el proveedor.",
+      "deleteFailed": "No fue posible eliminar el representante."
+    }
   }
 }
-

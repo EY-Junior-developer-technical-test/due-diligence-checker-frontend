@@ -10,6 +10,7 @@ import type { Supplier } from '../../suppliers/model/supplier'
 import { SuppliersTable } from '../../suppliers/components/SuppliersTable'
 import { SuppliersToolbar } from '../../suppliers/components/SuppliersToolbar'
 import { UserMenuCard } from './UserMenuCard'
+import { DeleteSupplierModal } from '../../suppliers/components/DeleteSupplierModal'
 
 export function HomePage() {
   const { t, i18n } = useTranslation('home')
@@ -24,6 +25,10 @@ export function HomePage() {
   const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [supplierToDelete, setSupplierToDelete] = useState<Supplier | null>(null)
+  const [isDeleteSubmitting, setIsDeleteSubmitting] = useState(false)
+  const [deleteError, setDeleteError] = useState<ApiError | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
 
   const currentLanguage = i18n.resolvedLanguage ?? i18n.language
 
@@ -86,7 +91,7 @@ export function HomePage() {
     return () => {
       isMounted = false
     }
-  }, [debouncedSearch, limit, page, t])
+  }, [debouncedSearch, limit, page, reloadKey, t])
 
   const onLanguageChange = async (language: string) => {
     await i18n.changeLanguage(language)
@@ -160,10 +165,64 @@ export function HomePage() {
             hasNextPage={hasNextPage}
             onPreviousPage={() => setPage((current) => Math.max(1, current - 1))}
             onNextPage={() => setPage((current) => (hasNextPage ? current + 1 : current))}
+            onDeleteSupplier={(supplier) => {
+              setSupplierToDelete(supplier)
+              setDeleteError(null)
+            }}
+            onViewSupplier={(supplier) => navigate(`/suppliers/${supplier.id}`)}
           />
         </section>
 
       </div>
+
+      <DeleteSupplierModal
+        title={t('delete.title')}
+        subtitle={t('delete.subtitle')}
+        primaryText={supplierToDelete?.corporateName ?? ''}
+        secondaryLabel={t('delete.taxIdLabel')}
+        secondaryValue={supplierToDelete?.taxIdentification ?? ''}
+        isOpen={Boolean(supplierToDelete)}
+        isSubmitting={isDeleteSubmitting}
+        error={deleteError}
+        onClose={() => {
+          if (!isDeleteSubmitting) {
+            setSupplierToDelete(null)
+            setDeleteError(null)
+          }
+        }}
+        onConfirm={() => {
+          if (!supplierToDelete || isDeleteSubmitting) {
+            return
+          }
+
+          setIsDeleteSubmitting(true)
+          setDeleteError(null)
+
+          supplierService
+            .deleteById(supplierToDelete.id)
+            .then(() => {
+              setSupplierToDelete(null)
+
+              if (suppliers.length <= 1 && page > 1) {
+                setPage((current) => Math.max(1, current - 1))
+                return
+              }
+
+              setReloadKey((current) => current + 1)
+            })
+            .catch((error) => {
+              const apiError =
+                error instanceof ApiError ? error : new ApiError(t('errors.deleteSupplier'))
+              setDeleteError(apiError)
+            })
+            .finally(() => {
+              setIsDeleteSubmitting(false)
+            })
+        }}
+        confirmLabel={t('delete.actions.confirm')}
+        cancelLabel={t('delete.actions.cancel')}
+        submittingLabel={t('delete.actions.deleting')}
+      />
     </main>
   )
 }

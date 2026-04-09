@@ -12,6 +12,8 @@ type SuppliersTableProps = {
   hasNextPage: boolean
   onPreviousPage: () => void
   onNextPage: () => void
+  onDeleteSupplier: (supplier: Supplier) => void
+  onViewSupplier: (supplier: Supplier) => void
 }
 
 export function SuppliersTable({
@@ -22,6 +24,8 @@ export function SuppliersTable({
   hasNextPage,
   onPreviousPage,
   onNextPage,
+  onDeleteSupplier,
+  onViewSupplier,
 }: SuppliersTableProps) {
   const { t } = useTranslation('home')
 
@@ -118,6 +122,7 @@ export function SuppliersTable({
                           type="button"
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/22 text-slate-200 transition duration-200 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10 hover:text-white hover:shadow-[0_0_14px_rgba(238,247,255,0.22)]"
                           aria-label={t('table.actions.view')}
+                          onClick={() => onViewSupplier(supplier)}
                         >
                           <FiEye className="h-3.5 w-3.5" />
                         </button>
@@ -139,6 +144,7 @@ export function SuppliersTable({
                           type="button"
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-red-900/80 bg-red-950/35 text-red-300 transition duration-200 hover:-translate-y-0.5 hover:border-red-700/90 hover:bg-red-900/45 hover:text-red-200 hover:shadow-[0_0_14px_rgba(151,46,46,0.35)]"
                           aria-label={t('table.actions.delete')}
+                          onClick={() => onDeleteSupplier(supplier)}
                         >
                           <FiTrash2 className="h-3.5 w-3.5" />
                         </button>

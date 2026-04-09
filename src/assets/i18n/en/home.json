@@ -40,6 +40,17 @@
     "logout": "Logout"
   },
   "errors": {
-    "loadSuppliers": "Unable to load suppliers."
+    "loadSuppliers": "Unable to load suppliers.",
+    "deleteSupplier": "Unable to delete the supplier."
+  },
+  "delete": {
+    "title": "Delete supplier",
+    "subtitle": "This action cannot be undone.",
+    "taxIdLabel": "Tax ID",
+    "actions": {
+      "cancel": "Cancel",
+      "confirm": "Delete",
+      "deleting": "Deleting..."
+    }
   }
 }

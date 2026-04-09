@@ -46,4 +46,43 @@
       "createFailed": "Unable to create the supplier."
     }
   }
+  ,
+  "details": {
+    "back": "Back",
+    "loading": "Loading supplier...",
+    "titleFallback": "Supplier",
+    "subtitle": "Tax ID: {{taxId}}",
+    "sections": {
+      "supplier": "Supplier details",
+      "representatives": "Representatives"
+    },
+    "fields": {
+      "corporateName": "Legal name",
+      "tradeName": "Trade name",
+      "taxIdentification": "Tax identification",
+      "phoneNumber": "Phone number",
+      "email": "Email",
+      "webSite": "Website",
+      "physicalAddress": "Physical address",
+      "country": "Country",
+      "annualBillingAmount": "Annual billing amount"
+    },
+    "representativeCount": "{{count}} representatives",
+    "editRepresentativeSoon": "Edit representative (coming soon).",
+    "deleteRepresentative": {
+      "title": "Delete representative",
+      "subtitle": "This action cannot be undone.",
+      "metaLabel": "Role",
+      "actions": {
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      }
+    },
+    "errors": {
+      "missingId": "Missing supplier id.",
+      "loadFailed": "Unable to load supplier details.",
+      "deleteFailed": "Unable to delete the representative."
+    }
+  }
 }

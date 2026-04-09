@@ -40,7 +40,18 @@
     "logout": "Cerrar sesión"
   },
   "errors": {
-    "loadSuppliers": "No fue posible cargar los proveedores."
+    "loadSuppliers": "No fue posible cargar los proveedores.",
+    "deleteSupplier": "No fue posible eliminar el proveedor."
+  },
+  "delete": {
+    "title": "Eliminar proveedor",
+    "subtitle": "Esta acción no se puede deshacer.",
+    "taxIdLabel": "RUC",
+    "actions": {
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleting": "Eliminando..."
+    }
   }
 }
 

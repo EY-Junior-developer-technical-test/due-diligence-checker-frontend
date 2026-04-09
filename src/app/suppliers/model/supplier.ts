@@ -12,6 +12,10 @@ export type SupplierRepresentative = {
   nationality: string
 }
 
+export type SupplierRepresentativeRecord = SupplierRepresentative & {
+  id: string
+}
+
 export type SupplierCreateCommand = {
   corporateName: string
   tradeName: string
@@ -33,6 +37,13 @@ export type Supplier = {
   phoneNumber: string
   email: string
   annualBillingAmount: number
+}
+
+export type SupplierDetails = Supplier & {
+  webSite: string
+  physicalAddress: string
+  country: string
+  representatives: SupplierRepresentativeRecord[]
 }
 
 export type SupplierListResult = {

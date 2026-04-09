@@ -7,8 +7,10 @@ import type {
 import type {
   Supplier,
   SupplierCreateCommand,
+  SupplierDetails,
   SupplierListResult,
   SupplierSearchQuery,
+  SupplierRepresentativeRecord,
 } from '../model/supplier'
 
 const DEFAULT_VALUE = '-'
@@ -110,6 +112,50 @@ export class SupplierAdapter {
     }
   }
 
+  static toSupplierDetails(dto: SupplierItemDto): SupplierDetails {
+    return {
+      ...this.toSupplier(dto, 0),
+      webSite: this.normalizeText(dto.webSite),
+      physicalAddress: this.normalizeText(dto.physicalAddress),
+      country: this.normalizeText(dto.country ?? dto.countryName),
+      representatives: (dto.representatives ?? []).map((representative, index) =>
+        this.toRepresentativeRecord(representative, index),
+      ),
+    }
+  }
+
+  static extractSingle(dto: unknown): SupplierItemDto | null {
+    if (!dto || typeof dto !== 'object') {
+      return null
+    }
+
+    if (Array.isArray(dto)) {
+      return null
+    }
+
+    const envelope = dto as { data?: unknown }
+    if (envelope.data && typeof envelope.data === 'object') {
+      const dataValue = envelope.data as any
+
+      if (dataValue && typeof dataValue === 'object' && !Array.isArray(dataValue)) {
+        if (dataValue.data && typeof dataValue.data === 'object' && !Array.isArray(dataValue.data)) {
+          return dataValue.data as SupplierItemDto
+        }
+
+        if (dataValue.id || dataValue.supplierId || dataValue.code) {
+          return dataValue as SupplierItemDto
+        }
+      }
+    }
+
+    const direct = dto as any
+    if (direct.id || direct.supplierId || direct.code) {
+      return direct as SupplierItemDto
+    }
+
+    return null
+  }
+
   private static extractItems(dto: SupplierListResponseDto): SupplierItemDto[] {
     if (Array.isArray(dto)) {
       return dto
@@ -159,6 +205,19 @@ export class SupplierAdapter {
       phoneNumber: this.normalizeText(dto.phoneNumber),
       email: this.normalizeText(dto.email),
       annualBillingAmount: this.normalizeNumber(dto.annualBillingAmount),
+    }
+  }
+
+  private static toRepresentativeRecord(dto: any, index: number): SupplierRepresentativeRecord {
+    const id = String(dto?.representativeId ?? `representative-${index}`)
+
+    return {
+      id,
+      role: this.normalizeText(dto?.role),
+      firstName: this.normalizeText(dto?.firstName),
+      lastName: this.normalizeText(dto?.lastName),
+      age: this.normalizeNumber(typeof dto?.age === 'number' ? dto.age : 0),
+      nationality: this.normalizeText(dto?.nationality),
     }
   }
 

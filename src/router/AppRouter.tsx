@@ -5,6 +5,7 @@ import { RegisterPage } from '../app/auth/pages/RegisterPage'
 import { ProtectedRoute } from '../app/auth/components/ProtectedRoute'
 import { HomePage } from '../app/shared/components/HomePage'
 import { CreateSupplierPage } from '../app/suppliers/pages/CreateSupplierPage'
+import { SupplierDetailsPage } from '../app/suppliers/pages/SupplierDetailsPage'
 
 export function AppRouter() {
   return (
@@ -29,6 +30,15 @@ export function AppRouter() {
           element={
             <ProtectedRoute>
               <CreateSupplierPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/suppliers/:supplierId"
+          element={
+            <ProtectedRoute>
+              <SupplierDetailsPage />
             </ProtectedRoute>
           }
         />
