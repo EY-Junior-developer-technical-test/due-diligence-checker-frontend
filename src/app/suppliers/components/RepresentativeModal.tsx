@@ -99,7 +99,7 @@ export function RepresentativeModal({
   const validateField = (key: keyof RepresentativeFormState, value: string): string | undefined => {
     const trimmedValue = value.trim()
 
-    if (!trimmedValue) {
+    if (key !== 'nationality' && !trimmedValue) {
       return t('create.errors.required')
     }
 
@@ -111,6 +111,10 @@ export function RepresentativeModal({
     }
 
     if (key === 'nationality') {
+      if (!trimmedValue) {
+        return
+      }
+
       if (!/^[A-Z]{2}$/.test(trimmedValue.toUpperCase())) {
         return t('create.errors.nationality')
       }
@@ -122,12 +126,17 @@ export function RepresentativeModal({
   const validateAll = (): RepresentativeFormErrors => {
     const nextErrors: RepresentativeFormErrors = {}
 
-    ;(['role', 'firstName', 'lastName', 'age', 'nationality'] as const).forEach((key) => {
+    ;(['role', 'firstName', 'lastName', 'age'] as const).forEach((key) => {
       const error = validateField(key, form[key])
       if (error) {
         nextErrors[key] = error
       }
     })
+
+    const nationalityError = validateField('nationality', form.nationality)
+    if (nationalityError) {
+      nextErrors.nationality = nationalityError
+    }
 
     return nextErrors
   }
@@ -176,7 +185,7 @@ export function RepresentativeModal({
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
       age: Number(form.age),
-      nationality: normalizedNationality,
+      ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
     })
 
     if (closeOnSubmit) {

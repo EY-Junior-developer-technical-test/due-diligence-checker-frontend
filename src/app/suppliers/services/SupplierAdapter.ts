@@ -4,6 +4,7 @@ import type {
   SupplierQueryRequestDto,
   SupplierCreateRequestDto,
   SupplierRepresentativeCreateRequestDto,
+  SupplierUpdateRequestDto,
 } from '../model/supplier.dto'
 import type {
   Supplier,
@@ -37,25 +38,44 @@ export class SupplierAdapter {
       physicalAddress: command.physicalAddress.trim(),
       country: command.country.trim(),
       annualBillingAmount: command.annualBillingAmount,
-      representatives: command.representatives?.map((representative) => ({
-        role: representative.role.trim(),
-        firstName: representative.firstName.trim(),
-        lastName: representative.lastName.trim(),
-        age: representative.age,
-        nationality: representative.nationality.trim().toUpperCase(),
-      })),
+      representatives: command.representatives?.map((representative) => {
+        const normalizedNationality = representative.nationality?.trim().toUpperCase()
+
+        return {
+          role: representative.role.trim(),
+          firstName: representative.firstName.trim(),
+          lastName: representative.lastName.trim(),
+          age: representative.age,
+          ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
+        }
+      }),
     }
   }
 
   static toRepresentativeUpsertRequestDto(
     representative: SupplierRepresentative,
   ): SupplierRepresentativeCreateRequestDto {
+    const normalizedNationality = representative.nationality?.trim().toUpperCase()
+
     return {
       role: representative.role.trim(),
       firstName: representative.firstName.trim(),
       lastName: representative.lastName.trim(),
       age: representative.age,
-      nationality: representative.nationality.trim().toUpperCase(),
+      ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
+    }
+  }
+
+  static toUpdateSupplierRequestDto(details: SupplierDetails): SupplierUpdateRequestDto {
+    return {
+      corporateName: details.corporateName.trim(),
+      tradeName: details.tradeName.trim(),
+      phoneNumber: details.phoneNumber.trim(),
+      email: details.email.trim(),
+      webSite: details.webSite.trim(),
+      physicalAddress: details.physicalAddress.trim(),
+      country: details.country.trim(),
+      annualBillingAmount: details.annualBillingAmount,
     }
   }
 
@@ -224,6 +244,9 @@ export class SupplierAdapter {
 
   private static toRepresentativeRecord(dto: any, index: number): SupplierRepresentativeRecord {
     const id = String(dto?.representativeId ?? `representative-${index}`)
+    const nationalityRaw = dto?.nationality
+    const nationality =
+      nationalityRaw === undefined || nationalityRaw === null ? undefined : String(nationalityRaw).trim()
 
     return {
       id,
@@ -231,7 +254,7 @@ export class SupplierAdapter {
       firstName: this.normalizeText(dto?.firstName),
       lastName: this.normalizeText(dto?.lastName),
       age: this.normalizeNumber(typeof dto?.age === 'number' ? dto.age : 0),
-      nationality: this.normalizeText(dto?.nationality),
+      ...(nationality ? { nationality } : {}),
     }
   }
 

@@ -51,7 +51,7 @@
     "back": "Back",
     "loading": "Loading supplier...",
     "titleFallback": "Supplier",
-    "description": "Complete information for \"{{name}}\" supplier.",
+    "description": "Complete information for {{name}} supplier.",
     "sections": {
       "supplier": "Supplier details",
       "representatives": "Representatives"
@@ -69,9 +69,10 @@
     },
     "actions": {
       "addRepresentative": "Add representative",
-      "editRepresentative": "Edit representative"
+      "editRepresentative": "Edit supplier",
+      "saveSupplier": "Save",
+      "cancelEdit": "Cancel"
     },
-    "editRepresentativeSoon": "Edit representative (coming soon).",
     "deleteRepresentative": {
       "title": "Delete representative",
       "subtitle": "This action cannot be undone.",
@@ -87,6 +88,7 @@
       "loadFailed": "Unable to load supplier details.",
       "deleteFailed": "Unable to delete the representative.",
       "upsertFailed": "Unable to save the representative.",
+      "updateSupplierFailed": "Unable to update the supplier.",
       "tooManyRequests": "Too many requests. Please wait a moment and try again."
     }
   }

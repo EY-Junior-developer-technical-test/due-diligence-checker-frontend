@@ -1,4 +1,4 @@
-import { FiArrowLeft, FiArrowRight, FiEdit2, FiEye, FiSearch, FiTrash2 } from 'react-icons/fi'
+import { FiArrowLeft, FiArrowRight, FiEye, FiSearch, FiTrash2 } from 'react-icons/fi'
 import { FaPhone } from 'react-icons/fa'
 import { useTranslation } from 'react-i18next'
 
@@ -125,13 +125,6 @@ export function SuppliersTable({
                           onClick={() => onViewSupplier(supplier)}
                         >
                           <FiEye className="h-3.5 w-3.5" />
-                        </button>
-                        <button
-                          type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/22 text-slate-200 transition duration-200 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10 hover:text-white hover:shadow-[0_0_14px_rgba(238,247,255,0.22)]"
-                          aria-label={t('table.actions.edit')}
-                        >
-                          <FiEdit2 className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"

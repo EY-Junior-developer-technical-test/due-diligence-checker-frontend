@@ -9,7 +9,7 @@ export type SupplierRepresentative = {
   firstName: string
   lastName: string
   age: number
-  nationality: string
+  nationality?: string
 }
 
 export type SupplierRepresentativeRecord = SupplierRepresentative & {

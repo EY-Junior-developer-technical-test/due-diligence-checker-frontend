@@ -3,6 +3,7 @@ import type {
   SupplierItemDto,
   SupplierListResponseDto,
   SupplierRepresentativeCreateRequestDto,
+  SupplierUpdateRequestDto,
 } from '../model/supplier.dto'
 import type {
   SupplierCreateCommand,
@@ -32,6 +33,11 @@ class SupplierService extends BaseService {
     const response = await this.get<unknown>(`/${encodeURIComponent(id)}`)
     const supplierDto = SupplierAdapter.extractSingle(response) ?? (response as SupplierItemDto)
     return SupplierAdapter.toSupplierDetails(supplierDto)
+  }
+
+  async updateById(id: string, details: SupplierDetails): Promise<void> {
+    const payload: SupplierUpdateRequestDto = SupplierAdapter.toUpdateSupplierRequestDto(details)
+    await this.put<unknown, SupplierUpdateRequestDto>(`/${encodeURIComponent(id)}`, payload)
   }
 
   async deleteRepresentativeById(supplierId: string, representativeId: string): Promise<void> {

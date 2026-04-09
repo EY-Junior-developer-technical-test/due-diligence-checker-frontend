@@ -50,7 +50,7 @@
     "back": "Volver",
     "loading": "Cargando proveedor...",
     "titleFallback": "Proveedor",
-    "description": "Información completa del proveedor \"{{name}}\".",
+    "description": "Información completa del proveedor {{name}}.",
     "sections": {
       "supplier": "Datos del proveedor",
       "representatives": "Representantes"
@@ -68,9 +68,10 @@
     },
     "actions": {
       "addRepresentative": "Añadir representante",
-      "editRepresentative": "Editar representante"
+      "editRepresentative": "Editar proveedor",
+      "saveSupplier": "Guardar",
+      "cancelEdit": "Cancelar"
     },
-    "editRepresentativeSoon": "Editar representante (próximamente).",
     "deleteRepresentative": {
       "title": "Eliminar representante",
       "subtitle": "Esta acción no se puede deshacer.",
@@ -86,6 +87,7 @@
       "loadFailed": "No fue posible cargar el proveedor.",
       "deleteFailed": "No fue posible eliminar el representante.",
       "upsertFailed": "No fue posible guardar el representante.",
+      "updateSupplierFailed": "No fue posible actualizar el proveedor.",
       "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
     }
   }

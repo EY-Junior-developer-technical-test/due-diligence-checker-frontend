@@ -9,6 +9,12 @@ type RepresentativeCardProps = {
 }
 
 export function RepresentativeCard({ representative, onEdit, onDelete }: RepresentativeCardProps) {
+  const metaParts = [
+    representative.role,
+    String(representative.age),
+    representative.nationality,
+  ].filter((value) => typeof value === 'string' && value.trim().length > 0)
+
   return (
     <div className="rounded-2xl border border-white/14 bg-white/[0.04] p-4 shadow-[0_12px_26px_rgba(2,8,18,0.3)]">
       <div className="flex items-start justify-between gap-3">
@@ -17,7 +23,7 @@ export function RepresentativeCard({ representative, onEdit, onDelete }: Represe
             {representative.firstName} {representative.lastName}
           </p>
           <p className="mt-1 text-sm text-slate-300">
-            {representative.role} · {representative.age} · {representative.nationality}
+            {metaParts.join(' · ')}
           </p>
         </div>
 
@@ -45,4 +51,3 @@ export function RepresentativeCard({ representative, onEdit, onDelete }: Represe
     </div>
   )
 }
-

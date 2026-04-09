@@ -48,7 +48,7 @@ export type SupplierRepresentativeCreateRequestDto = {
   firstName: string
   lastName: string
   age: number
-  nationality: string
+  nationality?: string
 }
 
 export type SupplierCreateRequestDto = {
@@ -62,6 +62,17 @@ export type SupplierCreateRequestDto = {
   country: string
   annualBillingAmount: number
   representatives?: SupplierRepresentativeCreateRequestDto[]
+}
+
+export type SupplierUpdateRequestDto = {
+  corporateName: string
+  tradeName: string
+  phoneNumber: string
+  email: string
+  webSite: string
+  physicalAddress: string
+  country: string
+  annualBillingAmount: number
 }
 
 export type SupplierListEnvelopeDto = {
