@@ -51,7 +51,7 @@
     "back": "Back",
     "loading": "Loading supplier...",
     "titleFallback": "Supplier",
-    "subtitle": "Tax ID: {{taxId}}",
+    "description": "Complete information for \"{{name}}\" supplier.",
     "sections": {
       "supplier": "Supplier details",
       "representatives": "Representatives"
@@ -67,7 +67,10 @@
       "country": "Country",
       "annualBillingAmount": "Annual billing amount"
     },
-    "representativeCount": "{{count}} representatives",
+    "actions": {
+      "addRepresentative": "Add representative",
+      "editRepresentative": "Edit representative"
+    },
     "editRepresentativeSoon": "Edit representative (coming soon).",
     "deleteRepresentative": {
       "title": "Delete representative",
@@ -82,7 +85,9 @@
     "errors": {
       "missingId": "Missing supplier id.",
       "loadFailed": "Unable to load supplier details.",
-      "deleteFailed": "Unable to delete the representative."
+      "deleteFailed": "Unable to delete the representative.",
+      "upsertFailed": "Unable to save the representative.",
+      "tooManyRequests": "Too many requests. Please wait a moment and try again."
     }
   }
 }

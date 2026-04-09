@@ -9,6 +9,10 @@ type RepresentativeModalProps = {
   isOpen: boolean
   onClose: () => void
   onSubmit: (representative: SupplierRepresentative) => void
+  title?: string
+  initialRepresentative?: Partial<SupplierRepresentative> | null
+  closeOnSubmit?: boolean
+  isSubmitting?: boolean
 }
 
 type RepresentativeFormState = {
@@ -24,7 +28,15 @@ type RepresentativeFormTouched = Partial<Record<keyof RepresentativeFormState, b
 
 const OVERLAY_FADE_MS = 160
 
-export function RepresentativeModal({ isOpen, onClose, onSubmit }: RepresentativeModalProps) {
+export function RepresentativeModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  title,
+  initialRepresentative,
+  closeOnSubmit = true,
+  isSubmitting = false,
+}: RepresentativeModalProps) {
   const { t } = useTranslation('suppliers')
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [isMounted, setIsMounted] = useState(false)
@@ -69,18 +81,20 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
   }, [isOpen, onClose])
 
   useEffect(() => {
-    if (isOpen) {
-      setForm({
-        role: '',
-        firstName: '',
-        lastName: '',
-        age: '',
-        nationality: '',
-      })
-      setErrors({})
-      setTouched({})
+    if (!isOpen) {
+      return
     }
-  }, [isOpen])
+
+    setForm({
+      role: initialRepresentative?.role ?? '',
+      firstName: initialRepresentative?.firstName ?? '',
+      lastName: initialRepresentative?.lastName ?? '',
+      age: typeof initialRepresentative?.age === 'number' ? String(initialRepresentative.age) : '',
+      nationality: initialRepresentative?.nationality ?? '',
+    })
+    setErrors({})
+    setTouched({})
+  }, [initialRepresentative, isOpen])
 
   const validateField = (key: keyof RepresentativeFormState, value: string): string | undefined => {
     const trimmedValue = value.trim()
@@ -165,7 +179,9 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
       nationality: normalizedNationality,
     })
 
-    onClose()
+    if (closeOnSubmit) {
+      onClose()
+    }
   }
 
   if (!isMounted) {
@@ -195,7 +211,9 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
       >
         <header className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-lg font-bold text-slate-100">{t('create.actions.addRepresentative')}</h2>
+            <h2 className="text-lg font-bold text-slate-100">
+              {title ?? t('create.actions.addRepresentative')}
+            </h2>
           </div>
 
           <button
@@ -203,6 +221,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-slate-100 transition hover:bg-white/15"
             onClick={onClose}
             aria-label={t('create.actions.cancel')}
+            disabled={isSubmitting}
           >
             <FiX className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -213,6 +232,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             label={t('create.representativeFields.role')}
             value={form.role}
             error={errors.role}
+            disabled={isSubmitting}
             onChange={(value) => {
               setTouched((current) => ({ ...current, role: true }))
               setForm((current) => ({ ...current, role: value }))
@@ -223,6 +243,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             value={form.age}
             inputMode="numeric"
             error={errors.age}
+            disabled={isSubmitting}
             onChange={(value) => {
               setTouched((current) => ({ ...current, age: true }))
               setForm((current) => ({ ...current, age: value.replace(/[^\d]/g, '') }))
@@ -232,6 +253,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             label={t('create.representativeFields.firstName')}
             value={form.firstName}
             error={errors.firstName}
+            disabled={isSubmitting}
             onChange={(value) => {
               setTouched((current) => ({ ...current, firstName: true }))
               setForm((current) => ({ ...current, firstName: value }))
@@ -241,6 +263,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             label={t('create.representativeFields.lastName')}
             value={form.lastName}
             error={errors.lastName}
+            disabled={isSubmitting}
             onChange={(value) => {
               setTouched((current) => ({ ...current, lastName: true }))
               setForm((current) => ({ ...current, lastName: value }))
@@ -250,6 +273,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             label={t('create.representativeFields.nationality')}
             value={form.nationality}
             error={errors.nationality}
+            disabled={isSubmitting}
             onChange={(value) => {
               setTouched((current) => ({ ...current, nationality: true }))
               setForm((current) => ({ ...current, nationality: value.toUpperCase() }))
@@ -264,6 +288,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             type="button"
             className="inline-flex items-center justify-center rounded-xl border border-white/18 bg-white/[0.06] px-4 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/[0.1]"
             onClick={onClose}
+            disabled={isSubmitting}
           >
             {t('create.actions.cancel')}
           </button>
@@ -271,6 +296,7 @@ export function RepresentativeModal({ isOpen, onClose, onSubmit }: Representativ
             type="button"
             className="home-add-button inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold text-slate-900"
             onClick={handleSubmit}
+            disabled={isSubmitting}
           >
             {t('create.actions.saveRepresentative')}
           </button>
@@ -289,6 +315,7 @@ function Field({
   placeholder,
   inputMode,
   className,
+  disabled,
 }: {
   label: string
   value: string
@@ -297,6 +324,7 @@ function Field({
   placeholder?: string
   inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
   className?: string
+  disabled?: boolean
 }) {
   return (
     <div className={className}>
@@ -308,6 +336,7 @@ function Field({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         inputMode={inputMode}
+        disabled={disabled}
         className={`home-search-input w-full rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none ${
           error ? 'ring-1 ring-inset ring-red-400/50' : ''
         }`}

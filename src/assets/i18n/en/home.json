@@ -41,7 +41,8 @@
   },
   "errors": {
     "loadSuppliers": "Unable to load suppliers.",
-    "deleteSupplier": "Unable to delete the supplier."
+    "deleteSupplier": "Unable to delete the supplier.",
+    "tooManyRequests": "Too many requests. Please wait a moment and try again."
   },
   "delete": {
     "title": "Delete supplier",

@@ -1,9 +1,15 @@
-import type { SupplierCreateRequestDto, SupplierItemDto, SupplierListResponseDto } from '../model/supplier.dto'
+import type {
+  SupplierCreateRequestDto,
+  SupplierItemDto,
+  SupplierListResponseDto,
+  SupplierRepresentativeCreateRequestDto,
+} from '../model/supplier.dto'
 import type {
   SupplierCreateCommand,
   SupplierDetails,
   SupplierListResult,
   SupplierSearchQuery,
+  SupplierRepresentative,
 } from '../model/supplier'
 import { BaseService } from '../../shared/services/BaseService'
 import { SupplierAdapter } from './SupplierAdapter'
@@ -31,6 +37,31 @@ class SupplierService extends BaseService {
   async deleteRepresentativeById(supplierId: string, representativeId: string): Promise<void> {
     await this.delete<unknown>(
       `/${encodeURIComponent(supplierId)}/representatives/${encodeURIComponent(representativeId)}`,
+    )
+  }
+
+  async createRepresentativeBySupplierId(
+    supplierId: string,
+    representative: SupplierRepresentative,
+  ): Promise<void> {
+    const payload: SupplierRepresentativeCreateRequestDto =
+      SupplierAdapter.toRepresentativeUpsertRequestDto(representative)
+    await this.post<unknown, SupplierRepresentativeCreateRequestDto>(
+      `/${encodeURIComponent(supplierId)}/representatives`,
+      payload,
+    )
+  }
+
+  async updateRepresentativeById(
+    supplierId: string,
+    representativeId: string,
+    representative: SupplierRepresentative,
+  ): Promise<void> {
+    const payload: SupplierRepresentativeCreateRequestDto =
+      SupplierAdapter.toRepresentativeUpsertRequestDto(representative)
+    await this.put<unknown, SupplierRepresentativeCreateRequestDto>(
+      `/${encodeURIComponent(supplierId)}/representatives/${encodeURIComponent(representativeId)}`,
+      payload,
     )
   }
 

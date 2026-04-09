@@ -3,6 +3,7 @@ import type {
   SupplierListResponseDto,
   SupplierQueryRequestDto,
   SupplierCreateRequestDto,
+  SupplierRepresentativeCreateRequestDto,
 } from '../model/supplier.dto'
 import type {
   Supplier,
@@ -11,6 +12,7 @@ import type {
   SupplierListResult,
   SupplierSearchQuery,
   SupplierRepresentativeRecord,
+  SupplierRepresentative,
 } from '../model/supplier'
 
 const DEFAULT_VALUE = '-'
@@ -42,6 +44,18 @@ export class SupplierAdapter {
         age: representative.age,
         nationality: representative.nationality.trim().toUpperCase(),
       })),
+    }
+  }
+
+  static toRepresentativeUpsertRequestDto(
+    representative: SupplierRepresentative,
+  ): SupplierRepresentativeCreateRequestDto {
+    return {
+      role: representative.role.trim(),
+      firstName: representative.firstName.trim(),
+      lastName: representative.lastName.trim(),
+      age: representative.age,
+      nationality: representative.nationality.trim().toUpperCase(),
     }
   }
 

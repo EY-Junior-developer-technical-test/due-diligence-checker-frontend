@@ -41,7 +41,8 @@
   },
   "errors": {
     "loadSuppliers": "No fue posible cargar los proveedores.",
-    "deleteSupplier": "No fue posible eliminar el proveedor."
+    "deleteSupplier": "No fue posible eliminar el proveedor.",
+    "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
   },
   "delete": {
     "title": "Eliminar proveedor",

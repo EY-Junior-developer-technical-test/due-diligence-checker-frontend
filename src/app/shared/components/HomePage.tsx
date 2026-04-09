@@ -73,12 +73,13 @@ export function HomePage() {
           return
         }
 
-        const apiError =
-          error instanceof ApiError ? error : new ApiError(t('errors.loadSuppliers'))
+        const apiError = error instanceof ApiError ? error : new ApiError(t('errors.loadSuppliers'))
+        const message =
+          apiError.status === 429 ? t('errors.tooManyRequests') : apiError.message
 
         setSuppliers([])
         setTotal(0)
-        setErrorMessage(apiError.message)
+        setErrorMessage(message)
       } finally {
         if (isMounted) {
           setIsLoading(false)
@@ -211,9 +212,10 @@ export function HomePage() {
               setReloadKey((current) => current + 1)
             })
             .catch((error) => {
-              const apiError =
-                error instanceof ApiError ? error : new ApiError(t('errors.deleteSupplier'))
-              setDeleteError(apiError)
+              const apiError = error instanceof ApiError ? error : new ApiError(t('errors.deleteSupplier'))
+              setDeleteError(
+                apiError.status === 429 ? new ApiError(t('errors.tooManyRequests'), { status: 429 }) : apiError,
+              )
             })
             .finally(() => {
               setIsDeleteSubmitting(false)

@@ -10,6 +10,8 @@ import { supplierService } from '../services/SupplierService'
 import type { SupplierDetails, SupplierRepresentativeRecord } from '../model/supplier'
 import { RepresentativeCard } from '../components/RepresentativeCard'
 import { DeleteSupplierModal } from '../components/DeleteSupplierModal'
+import { RepresentativeModal } from '../components/RepresentativeModal'
+import type { SupplierRepresentative } from '../model/supplier'
 
 export function SupplierDetailsPage() {
   const { t } = useTranslation('suppliers')
@@ -24,6 +26,11 @@ export function SupplierDetailsPage() {
     useState<SupplierRepresentativeRecord | null>(null)
   const [isDeleteSubmitting, setIsDeleteSubmitting] = useState(false)
   const [deleteError, setDeleteError] = useState<ApiError | null>(null)
+  const [isRepresentativeModalOpen, setIsRepresentativeModalOpen] = useState(false)
+  const [editingRepresentative, setEditingRepresentative] =
+    useState<SupplierRepresentativeRecord | null>(null)
+  const [isRepresentativeSubmitting, setIsRepresentativeSubmitting] = useState(false)
+  const [representativeError, setRepresentativeError] = useState<ApiError | null>(null)
 
   const title = supplier?.corporateName ?? t('details.titleFallback')
 
@@ -56,7 +63,11 @@ export function SupplierDetailsPage() {
           return
         }
 
-        const apiError = err instanceof ApiError ? err : new ApiError(t('details.errors.loadFailed'))
+        const rawError = err instanceof ApiError ? err : new ApiError(t('details.errors.loadFailed'))
+        const apiError =
+          rawError.status === 429
+            ? new ApiError(t('details.errors.tooManyRequests'), { status: 429 })
+            : rawError
         setError(apiError)
         setSupplier(null)
       })
@@ -83,7 +94,11 @@ export function SupplierDetailsPage() {
       .getById(supplierId)
       .then((result) => setSupplier(result))
       .catch((err) => {
-        const apiError = err instanceof ApiError ? err : new ApiError(t('details.errors.loadFailed'))
+        const rawError = err instanceof ApiError ? err : new ApiError(t('details.errors.loadFailed'))
+        const apiError =
+          rawError.status === 429
+            ? new ApiError(t('details.errors.tooManyRequests'), { status: 429 })
+            : rawError
         setError(apiError)
       })
       .finally(() => setIsLoading(false))
@@ -113,6 +128,9 @@ export function SupplierDetailsPage() {
                     {title}
                   </h1>
                   <div className="mt-3 ey-line" />
+                  <p className="mt-3 max-w-3xl text-sm text-slate-300">
+                    {t('details.description', { name: title })}
+                  </p>
                 </div>
               </div>
             </div>
@@ -193,6 +211,20 @@ export function SupplierDetailsPage() {
                     </span>
                   </h2>
                 </div>
+
+                <button
+                  type="button"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/18 bg-white/[0.06] text-slate-100 transition hover:bg-white/[0.1]"
+                  onClick={() => {
+                    setEditingRepresentative(null)
+                    setRepresentativeError(null)
+                    setIsRepresentativeModalOpen(true)
+                  }}
+                  aria-label={t('details.actions.addRepresentative')}
+                  title={t('details.actions.addRepresentative')}
+                >
+                  <span className="text-lg leading-none">+</span>
+                </button>
               </div>
 
               <div className="mt-5 space-y-3">
@@ -201,7 +233,9 @@ export function SupplierDetailsPage() {
                     key={representative.id}
                     representative={representative}
                     onEdit={() => {
-                      window.alert(t('details.editRepresentativeSoon'))
+                      setEditingRepresentative(representative)
+                      setRepresentativeError(null)
+                      setIsRepresentativeModalOpen(true)
                     }}
                     onDelete={() => {
                       setRepresentativeToDelete(representative)
@@ -210,10 +244,74 @@ export function SupplierDetailsPage() {
                   />
                 ))}
               </div>
+
+              {representativeError ? (
+                <div className="mt-4 rounded-2xl border border-red-300/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+                  <p className="font-semibold text-red-50">
+                    {representativeError.title ?? `Error ${representativeError.status ?? ''}`.trim()}
+                  </p>
+                  <p className="mt-1 text-red-100">{representativeError.message}</p>
+                </div>
+              ) : null}
             </aside>
           </section>
         ) : null}
       </div>
+
+      <RepresentativeModal
+        isOpen={isRepresentativeModalOpen}
+        isSubmitting={isRepresentativeSubmitting}
+        onClose={() => {
+          if (!isRepresentativeSubmitting) {
+            setIsRepresentativeModalOpen(false)
+            setEditingRepresentative(null)
+          }
+        }}
+        title={
+          editingRepresentative ? t('details.actions.editRepresentative') : t('details.actions.addRepresentative')
+        }
+        initialRepresentative={
+          editingRepresentative
+            ? {
+                role: editingRepresentative.role,
+                firstName: editingRepresentative.firstName,
+                lastName: editingRepresentative.lastName,
+                age: editingRepresentative.age,
+                nationality: editingRepresentative.nationality,
+              }
+            : null
+        }
+        closeOnSubmit={false}
+        onSubmit={(representative: SupplierRepresentative) => {
+          if (!supplierId || isRepresentativeSubmitting) {
+            return
+          }
+
+          setIsRepresentativeSubmitting(true)
+          setRepresentativeError(null)
+
+          const action = editingRepresentative
+            ? supplierService.updateRepresentativeById(supplierId, editingRepresentative.id, representative)
+            : supplierService.createRepresentativeBySupplierId(supplierId, representative)
+
+          action
+            .then(() => {
+              setIsRepresentativeModalOpen(false)
+              setEditingRepresentative(null)
+              reloadSupplier()
+            })
+            .catch((err) => {
+              const rawError =
+                err instanceof ApiError ? err : new ApiError(t('details.errors.upsertFailed'))
+              setRepresentativeError(
+                rawError.status === 429
+                  ? new ApiError(t('details.errors.tooManyRequests'), { status: 429 })
+                  : rawError,
+              )
+            })
+            .finally(() => setIsRepresentativeSubmitting(false))
+        }}
+      />
 
       <DeleteSupplierModal
         title={repDeleteTitle}
@@ -249,8 +347,12 @@ export function SupplierDetailsPage() {
               reloadSupplier()
             })
             .catch((err) => {
-              const apiError = err instanceof ApiError ? err : new ApiError(t('details.errors.deleteFailed'))
-              setDeleteError(apiError)
+              const rawError = err instanceof ApiError ? err : new ApiError(t('details.errors.deleteFailed'))
+              setDeleteError(
+                rawError.status === 429
+                  ? new ApiError(t('details.errors.tooManyRequests'), { status: 429 })
+                  : rawError,
+              )
             })
             .finally(() => {
               setIsDeleteSubmitting(false)

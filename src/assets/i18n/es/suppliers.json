@@ -50,7 +50,7 @@
     "back": "Volver",
     "loading": "Cargando proveedor...",
     "titleFallback": "Proveedor",
-    "subtitle": "RUC: {{taxId}}",
+    "description": "Información completa del proveedor \"{{name}}\".",
     "sections": {
       "supplier": "Datos del proveedor",
       "representatives": "Representantes"
@@ -66,7 +66,10 @@
       "country": "País",
       "annualBillingAmount": "Facturación anual"
     },
-    "representativeCount": "{{count}} representantes",
+    "actions": {
+      "addRepresentative": "Añadir representante",
+      "editRepresentative": "Editar representante"
+    },
     "editRepresentativeSoon": "Editar representante (próximamente).",
     "deleteRepresentative": {
       "title": "Eliminar representante",
@@ -81,7 +84,9 @@
     "errors": {
       "missingId": "Falta el id del proveedor.",
       "loadFailed": "No fue posible cargar el proveedor.",
-      "deleteFailed": "No fue posible eliminar el representante."
+      "deleteFailed": "No fue posible eliminar el representante.",
+      "upsertFailed": "No fue posible guardar el representante.",
+      "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
     }
   }
 }
