@@ -74,6 +74,24 @@
 html,
 body {
 	height: 100%;
+	width: 100%;
+	overflow-x: hidden;
+}
+
+html {
+	background:
+		radial-gradient(circle at 18% 78%, rgba(255, 157, 58, 0.22), rgba(255, 157, 58, 0) 34%),
+		radial-gradient(circle at 86% 20%, rgba(107, 213, 255, 0.24), rgba(107, 213, 255, 0) 33%),
+		linear-gradient(112deg, rgba(255, 230, 0, 0.12) 0%, rgba(255, 230, 0, 0) 30%),
+		linear-gradient(225deg, rgba(120, 186, 255, 0.17) 0%, rgba(120, 186, 255, 0) 36%),
+		repeating-linear-gradient(
+			90deg,
+			rgba(255, 255, 255, 0.015) 0,
+			rgba(255, 255, 255, 0.015) 1px,
+			transparent 1px,
+			transparent 80px
+		),
+		linear-gradient(145deg, #090d18 0%, #0f1424 48%, #0d1320 100%);
 }
 
 body {

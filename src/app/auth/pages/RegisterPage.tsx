@@ -85,7 +85,7 @@ export function RegisterPage() {
             type="password"
             autoComplete="new-password"
             className="auth-input"
-            placeholder="••••••••"
+            placeholder={'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
@@ -93,15 +93,11 @@ export function RegisterPage() {
         </div>
 
         {successMessage ? (
-          <p className="auth-alert-success rounded-lg px-3 py-2 text-sm">
-            {successMessage}
-          </p>
+          <p className="auth-alert-success rounded-lg px-3 py-2 text-sm">{successMessage}</p>
         ) : null}
 
         {errorMessage ? (
-          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">
-            {errorMessage}
-          </p>
+          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">{errorMessage}</p>
         ) : null}
 
         <button

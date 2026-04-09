@@ -40,20 +40,38 @@ export function SuppliersTable({
       ) : null}
 
       <div className="overflow-x-auto">
-        <table className="min-w-full text-left">
+        <table className="w-full table-fixed text-left">
+          <colgroup>
+            <col className="w-[28%]" />
+            <col className="w-[16%]" />
+            <col className="w-[14%]" />
+            <col className="w-[22%]" />
+            <col className="w-[9%]" />
+            <col className="w-[11rem]" />
+          </colgroup>
           <thead>
             <tr className="border-b border-white/10 bg-black/10 text-xs uppercase tracking-[0.14em] text-slate-300">
-              <th className="px-5 py-3 font-semibold sm:px-6">{t('table.headers.corporateName')}</th>
-              <th className="px-5 py-3 font-semibold sm:px-6">{t('table.headers.taxIdentification')}</th>
-              <th className="px-5 py-3 font-semibold sm:px-6">
+              <th className="whitespace-normal px-5 py-3 font-semibold sm:px-6">
+                {t('table.headers.corporateName')}
+              </th>
+              <th className="whitespace-normal px-5 py-3 font-semibold sm:px-6">
+                {t('table.headers.taxIdentification')}
+              </th>
+              <th className="whitespace-normal px-5 py-3 font-semibold sm:px-6">
                 <span className="inline-flex items-center gap-1.5">
                   <FaPhone className="h-3 w-3" aria-hidden="true" />
                   <span>{t('table.headers.phoneNumber')}</span>
                 </span>
               </th>
-              <th className="px-5 py-3 font-semibold sm:px-6">{t('table.headers.email')}</th>
-              <th className="px-5 py-3 font-semibold sm:px-6">{t('table.headers.annualBillingAmount')}</th>
-              <th className="px-5 py-3 font-semibold sm:px-6">{t('table.headers.actions')}</th>
+              <th className="whitespace-normal px-5 py-3 font-semibold sm:px-6">
+                {t('table.headers.email')}
+              </th>
+              <th className="whitespace-normal px-5 py-3 text-right font-semibold sm:px-6">
+                {t('table.headers.annualBillingAmount')}
+              </th>
+              <th className="w-[11rem] whitespace-normal px-5 py-3 text-right font-semibold sm:px-6">
+                {t('table.headers.actions')}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -77,17 +95,25 @@ export function SuppliersTable({
               ? suppliers.map((supplier) => (
                   <tr key={supplier.id} className="border-b border-white/10 text-sm text-slate-100 last:border-b-0">
                     <td className="px-5 py-3.5 sm:px-6">
-                      <p className="max-w-[17rem] break-words font-semibold leading-snug text-slate-100">
+                      <p className="break-words font-semibold leading-snug text-slate-100">
                         {supplier.corporateName}
                       </p>
                       <p className="mt-1 text-xs text-slate-400">{supplier.tradeName}</p>
                     </td>
-                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">{supplier.taxIdentification}</td>
-                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">{supplier.phoneNumber}</td>
-                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">{supplier.email}</td>
-                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">$ {formatAmount(supplier.annualBillingAmount)}</td>
-                    <td className="px-5 py-3.5 sm:px-6">
-                      <div className="flex flex-wrap gap-2">
+                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">
+                      <p className="break-all">{supplier.taxIdentification}</p>
+                    </td>
+                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">
+                      <p className="break-all">{supplier.phoneNumber}</p>
+                    </td>
+                    <td className="px-5 py-3.5 text-slate-200 sm:px-6">
+                      <p className="break-all">{supplier.email}</p>
+                    </td>
+                    <td className="px-5 py-3.5 text-right text-slate-200 sm:px-6">
+                      $ {formatAmount(supplier.annualBillingAmount)}
+                    </td>
+                    <td className="w-[11rem] px-5 py-3.5 sm:px-6">
+                      <div className="flex flex-nowrap justify-end gap-2">
                         <button
                           type="button"
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/22 text-slate-200 transition duration-200 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10 hover:text-white hover:shadow-[0_0_14px_rgba(238,247,255,0.22)]"

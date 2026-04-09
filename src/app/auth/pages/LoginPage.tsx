@@ -67,7 +67,7 @@ export function LoginPage() {
             type="password"
             autoComplete="current-password"
             className="auth-input"
-            placeholder="••••••••"
+            placeholder={'\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
@@ -75,9 +75,7 @@ export function LoginPage() {
         </div>
 
         {errorMessage ? (
-          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">
-            {errorMessage}
-          </p>
+          <p className="auth-alert-error rounded-lg px-3 py-2 text-sm">{errorMessage}</p>
         ) : null}
 
         <div className="pt-2">
