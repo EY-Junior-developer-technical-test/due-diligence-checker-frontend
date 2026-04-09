@@ -17,6 +17,7 @@ class SupplierService extends BaseService {
 
     if (queryDto.search) {
       params.set('search', queryDto.search)
+      params.set('searchTerm', queryDto.search)
     }
 
     const response = await this.get<SupplierListResponseDto>(`?${params.toString()}`)

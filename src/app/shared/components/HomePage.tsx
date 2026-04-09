@@ -11,6 +11,24 @@ import { SuppliersTable } from '../../suppliers/components/SuppliersTable'
 import { SuppliersToolbar } from '../../suppliers/components/SuppliersToolbar'
 import { UserMenuCard } from './UserMenuCard'
 
+function matchesSearchTerm(supplier: Supplier, searchTerm: string) {
+  const normalizedSearch = searchTerm.trim().toLowerCase()
+
+  if (!normalizedSearch) {
+    return true
+  }
+
+  const searchableFields = [
+    supplier.corporateName,
+    supplier.tradeName,
+    supplier.taxIdentification,
+    supplier.phoneNumber,
+    supplier.email,
+  ]
+
+  return searchableFields.some((field) => field.toLowerCase().includes(normalizedSearch))
+}
+
 export function HomePage() {
   const { t, i18n } = useTranslation('home')
   const navigate = useNavigate()
@@ -35,7 +53,7 @@ export function HomePage() {
     const timeout = window.setTimeout(() => {
       setDebouncedSearch(searchText.trim())
       setPage(1)
-    }, 350)
+    }, 1000)
 
     return () => {
       window.clearTimeout(timeout)
@@ -60,8 +78,10 @@ export function HomePage() {
           return
         }
 
-        setSuppliers(result.items)
-        setTotal(result.total)
+        const filteredItems = result.items.filter((item) => matchesSearchTerm(item, debouncedSearch))
+
+        setSuppliers(filteredItems)
+        setTotal(debouncedSearch ? filteredItems.length : result.total)
       } catch (error) {
         if (!isMounted) {
           return
