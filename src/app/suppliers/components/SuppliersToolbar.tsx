@@ -6,6 +6,7 @@ type SuppliersToolbarProps = {
   searchPlaceholder: string
   addSupplierLabel: string
   addSupplierHint: string
+  onAddSupplier: () => void
 }
 
 export function SuppliersToolbar({
@@ -14,6 +15,7 @@ export function SuppliersToolbar({
   searchPlaceholder,
   addSupplierLabel,
   addSupplierHint,
+  onAddSupplier,
 }: SuppliersToolbarProps) {
   return (
     <section className="home-floating-toolbar reveal-up pt-1 sm:pt-2">
@@ -34,6 +36,7 @@ export function SuppliersToolbar({
           className="home-add-button inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-semibold text-slate-900"
           title={addSupplierHint}
           aria-label={addSupplierLabel}
+          onClick={onAddSupplier}
         >
           <FiPlus className="h-4 w-4" aria-hidden="true" />
           <span>{addSupplierLabel}</span>

@@ -4,6 +4,7 @@ import { LoginPage } from '../app/auth/pages/LoginPage'
 import { RegisterPage } from '../app/auth/pages/RegisterPage'
 import { ProtectedRoute } from '../app/auth/components/ProtectedRoute'
 import { HomePage } from '../app/shared/components/HomePage'
+import { CreateSupplierPage } from '../app/suppliers/pages/CreateSupplierPage'
 
 export function AppRouter() {
   return (
@@ -19,6 +20,15 @@ export function AppRouter() {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/suppliers/new"
+          element={
+            <ProtectedRoute>
+              <CreateSupplierPage />
             </ProtectedRoute>
           }
         />

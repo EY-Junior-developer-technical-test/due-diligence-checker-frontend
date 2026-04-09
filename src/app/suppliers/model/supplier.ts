@@ -4,6 +4,27 @@ export type SupplierSearchQuery = {
   search?: string
 }
 
+export type SupplierRepresentative = {
+  role: string
+  firstName: string
+  lastName: string
+  age: number
+  nationality: string
+}
+
+export type SupplierCreateCommand = {
+  corporateName: string
+  tradeName: string
+  taxIdentification: string
+  phoneNumber: string
+  email: string
+  webSite: string
+  physicalAddress: string
+  country: string
+  annualBillingAmount: number
+  representatives?: SupplierRepresentative[]
+}
+
 export type Supplier = {
   id: string
   corporateName: string

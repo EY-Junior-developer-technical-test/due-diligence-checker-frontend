@@ -11,24 +11,6 @@ import { SuppliersTable } from '../../suppliers/components/SuppliersTable'
 import { SuppliersToolbar } from '../../suppliers/components/SuppliersToolbar'
 import { UserMenuCard } from './UserMenuCard'
 
-function matchesSearchTerm(supplier: Supplier, searchTerm: string) {
-  const normalizedSearch = searchTerm.trim().toLowerCase()
-
-  if (!normalizedSearch) {
-    return true
-  }
-
-  const searchableFields = [
-    supplier.corporateName,
-    supplier.tradeName,
-    supplier.taxIdentification,
-    supplier.phoneNumber,
-    supplier.email,
-  ]
-
-  return searchableFields.some((field) => field.toLowerCase().includes(normalizedSearch))
-}
-
 export function HomePage() {
   const { t, i18n } = useTranslation('home')
   const navigate = useNavigate()
@@ -38,7 +20,7 @@ export function HomePage() {
   const [searchText, setSearchText] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [page, setPage] = useState(1)
-  const [limit] = useState(10)
+  const [limit] = useState(5)
   const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -48,6 +30,7 @@ export function HomePage() {
   const fullName = session?.fullname?.trim() || t('user.fallbackName')
 
   const totalPages = Math.max(1, Math.ceil(total / limit))
+  const hasNextPage = page < totalPages || suppliers.length === limit
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -78,10 +61,8 @@ export function HomePage() {
           return
         }
 
-        const filteredItems = result.items.filter((item) => matchesSearchTerm(item, debouncedSearch))
-
-        setSuppliers(filteredItems)
-        setTotal(debouncedSearch ? filteredItems.length : result.total)
+        setSuppliers(result.items)
+        setTotal(result.total)
       } catch (error) {
         if (!isMounted) {
           return
@@ -164,6 +145,7 @@ export function HomePage() {
             searchPlaceholder={t('toolbar.searchPlaceholder')}
             addSupplierLabel={t('toolbar.addSupplier')}
             addSupplierHint={t('toolbar.addSupplierSoon')}
+            onAddSupplier={() => navigate('/suppliers/new')}
           />
 
           <p className="pr-1 text-right text-xs font-medium text-slate-400">
@@ -175,9 +157,9 @@ export function HomePage() {
             isLoading={isLoading}
             errorMessage={errorMessage}
             page={page}
-            totalPages={totalPages}
+            hasNextPage={hasNextPage}
             onPreviousPage={() => setPage((current) => Math.max(1, current - 1))}
-            onNextPage={() => setPage((current) => Math.min(totalPages, current + 1))}
+            onNextPage={() => setPage((current) => (hasNextPage ? current + 1 : current))}
           />
         </section>
 

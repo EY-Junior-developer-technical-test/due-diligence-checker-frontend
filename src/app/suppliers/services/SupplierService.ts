@@ -1,11 +1,16 @@
-import type { SupplierListResponseDto } from '../model/supplier.dto'
-import type { SupplierListResult, SupplierSearchQuery } from '../model/supplier'
+import type { SupplierCreateRequestDto, SupplierListResponseDto } from '../model/supplier.dto'
+import type { SupplierCreateCommand, SupplierListResult, SupplierSearchQuery } from '../model/supplier'
 import { BaseService } from '../../shared/services/BaseService'
 import { SupplierAdapter } from './SupplierAdapter'
 
 class SupplierService extends BaseService {
   constructor() {
     super('/suppliers')
+  }
+
+  async create(command: SupplierCreateCommand): Promise<void> {
+    const payload: SupplierCreateRequestDto = SupplierAdapter.toCreateRequestDto(command)
+    await this.post<unknown, SupplierCreateRequestDto>('', payload)
   }
 
   async list(query: SupplierSearchQuery): Promise<SupplierListResult> {

@@ -43,12 +43,66 @@ export type SupplierRepresentativeDto = {
   nationality?: string | null
 }
 
+export type SupplierRepresentativeCreateRequestDto = {
+  role: string
+  firstName: string
+  lastName: string
+  age: number
+  nationality: string
+}
+
+export type SupplierCreateRequestDto = {
+  corporateName: string
+  tradeName: string
+  taxIdentification: string
+  phoneNumber: string
+  email: string
+  webSite: string
+  physicalAddress: string
+  country: string
+  annualBillingAmount: number
+  representatives?: SupplierRepresentativeCreateRequestDto[]
+}
+
 export type SupplierListEnvelopeDto = {
-  data?: SupplierItemDto[]
+  data?:
+    | SupplierItemDto[]
+    | {
+        data?: SupplierItemDto[]
+        items?: SupplierItemDto[]
+        results?: SupplierItemDto[]
+        total?: number
+        totalItems?: number
+        totalCount?: number
+        totalRecords?: number
+        count?: number
+        page?: number
+        limit?: number
+        pagination?: {
+          page?: number
+          limit?: number
+          total?: number
+          totalItems?: number
+          totalCount?: number
+          totalRecords?: number
+          count?: number
+        }
+        meta?: {
+          page?: number
+          limit?: number
+          total?: number
+          totalItems?: number
+          totalCount?: number
+          totalRecords?: number
+          count?: number
+        }
+      }
   items?: SupplierItemDto[]
   results?: SupplierItemDto[]
   total?: number
   totalItems?: number
+  totalCount?: number
+  totalRecords?: number
   count?: number
   page?: number
   limit?: number
@@ -56,11 +110,19 @@ export type SupplierListEnvelopeDto = {
     page?: number
     limit?: number
     total?: number
+    totalItems?: number
+    totalCount?: number
+    totalRecords?: number
+    count?: number
   }
   meta?: {
     page?: number
     limit?: number
     total?: number
+    totalItems?: number
+    totalCount?: number
+    totalRecords?: number
+    count?: number
   }
 }
 

@@ -416,25 +416,53 @@ body {
 	backdrop-filter: blur(14px) saturate(118%);
 }
 
+.home-surface-soft {
+	border-color: rgba(236, 242, 252, 0.16);
+	background:
+		linear-gradient(152deg, rgba(240, 247, 255, 0.07), rgba(194, 214, 240, 0.04)),
+		linear-gradient(122deg, rgba(255, 230, 0, 0.09), rgba(255, 230, 0, 0) 34%),
+		linear-gradient(160deg, rgba(10, 15, 26, 0.42), rgba(8, 13, 24, 0.46));
+	box-shadow:
+		0 20px 46px rgba(4, 7, 12, 0.32),
+		0 1px 0 rgba(255, 255, 255, 0.2) inset,
+		0 -1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
 .home-floating-toolbar {
 	position: relative;
 	z-index: 2;
 }
 
 .home-search-input {
-	border: 1px solid rgba(227, 237, 250, 0.35);
 	background: linear-gradient(145deg, rgba(248, 252, 255, 0.2), rgba(202, 218, 239, 0.12));
 	backdrop-filter: blur(9px);
-	transition: border-color 180ms ease, box-shadow 180ms ease;
+	border: none;
+	outline: none;
+	box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12) inset;
+	transition: box-shadow 180ms ease;
+}
+
+.home-search-input:hover {
+	box-shadow:
+		0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+		0 14px 30px rgba(3, 8, 19, 0.22),
+		0 0 22px rgba(255, 255, 255, 0.06);
 }
 
 .home-search-input::placeholder {
-	color: rgba(231, 239, 250, 0.72);
+	color: rgba(231, 239, 250, 0.46);
 }
 
 .home-search-input:focus {
-	border-color: rgba(255, 230, 0, 0.76);
-	box-shadow: 0 0 0 4px rgba(255, 230, 0, 0.18);
+	box-shadow:
+		0 0 0 1px rgba(255, 255, 255, 0.2) inset,
+		0 0 0 2px rgba(255, 230, 0, 0.18),
+		0 0 28px rgba(255, 230, 0, 0.16),
+		0 18px 36px rgba(2, 8, 20, 0.28);
+}
+
+.home-search-input:focus-visible {
+	outline: none;
 }
 
 .home-add-button {

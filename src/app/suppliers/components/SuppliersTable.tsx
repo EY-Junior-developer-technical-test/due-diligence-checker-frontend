@@ -9,7 +9,7 @@ type SuppliersTableProps = {
   isLoading: boolean
   errorMessage: string | null
   page: number
-  totalPages: number
+  hasNextPage: boolean
   onPreviousPage: () => void
   onNextPage: () => void
 }
@@ -19,7 +19,7 @@ export function SuppliersTable({
   isLoading,
   errorMessage,
   page,
-  totalPages,
+  hasNextPage,
   onPreviousPage,
   onNextPage,
 }: SuppliersTableProps) {
@@ -168,7 +168,7 @@ export function SuppliersTable({
           type="button"
           className="rounded-md border border-white/20 p-1.5 text-slate-200 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-35"
           onClick={onNextPage}
-          disabled={page >= totalPages || isLoading}
+          disabled={!hasNextPage || isLoading}
           aria-label={t('pagination.next')}
         >
           <FiArrowRight className="h-3 w-3" />

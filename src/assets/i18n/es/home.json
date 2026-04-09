@@ -5,20 +5,20 @@
     "subtitle": "Monitorea terceros y prepara evaluaciones de due diligence en un solo lugar."
   },
   "toolbar": {
-    "searchPlaceholder": "Buscar por razon social, nombre comercial o RUC...",
+    "searchPlaceholder": "Buscar por razón social, nombre comercial o RUC...",
     "addSupplier": "Añadir proveedor",
-    "addSupplierSoon": "Proximamente"
+    "addSupplierSoon": "Crear un nuevo proveedor"
   },
   "table": {
     "count": "{{count}} proveedores",
     "empty": "No encontramos proveedores con ese criterio.",
     "loading": "Cargando proveedores...",
     "headers": {
-      "corporateName": "Razon social",
-      "taxIdentification": "Identificacion fiscal",
-      "phoneNumber": "Telefono",
+      "corporateName": "Razón social",
+      "taxIdentification": "Identificación fiscal",
+      "phoneNumber": "Teléfono",
       "email": "Email",
-      "annualBillingAmount": "Facturacion anual",
+      "annualBillingAmount": "Facturación anual",
       "actions": "Acciones"
     },
     "actions": {
@@ -31,15 +31,16 @@
   "pagination": {
     "previous": "Anterior",
     "next": "Siguiente",
-    "page": "Pagina {{page}}"
+    "page": "Página {{page}}"
   },
   "user": {
     "fallbackName": "Analista",
     "options": "Opciones de usuario",
     "exit": "Salir",
-    "logout": "Cerrar sesion"
+    "logout": "Cerrar sesión"
   },
   "errors": {
     "loadSuppliers": "No fue posible cargar los proveedores."
   }
 }
+
