@@ -1,0 +1,55 @@
+{
+  "modal": {
+    "title": "Fuentes de screening",
+    "forensicTitle": "Escaneo Forense",
+    "subtitle": "Selecciona las fuentes a analizar para este proveedor.",
+    "supplierMeta": {
+      "taxId": "Identificación fiscal",
+      "representatives": "Representantes"
+    },
+    "sources": {
+      "title": "Fuentes",
+      "interpol": "Interpol",
+      "secop": "SECOP",
+      "smv": "SMV"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "start": "Iniciar screening",
+      "back": "Volver",
+      "close": "Cerrar"
+    }
+  },
+  "analyzing": {
+    "title": "Analizando fuentes",
+    "subtitle": "Puede tardar hasta 30 segundos dependiendo de la fuente.",
+    "status": {
+      "preparing": "Preparando solicitud...",
+      "scanning": "Analizando {{source}}...",
+      "finalizing": "Finalizando resultados..."
+    }
+  },
+  "results": {
+    "title": "Resultados del screening",
+    "subtitle": "Proveedor: {{name}}",
+    "summary": {
+      "hits": "{{count}} hallazgos",
+      "noHits": "No se encontraron hallazgos."
+    },
+    "tabs": {
+      "all": "Todo"
+    },
+    "table": {
+      "empty": "No hay coincidencias en esta fuente.",
+      "fields": {
+        "title": "Hallazgo",
+        "details": "Detalle",
+        "risk": "Riesgo"
+      }
+    }
+  },
+  "errors": {
+    "loadSupplier": "No fue posible cargar el proveedor.",
+    "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
+  }
+}

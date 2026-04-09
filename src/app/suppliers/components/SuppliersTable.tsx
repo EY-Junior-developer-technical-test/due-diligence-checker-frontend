@@ -14,6 +14,7 @@ type SuppliersTableProps = {
   onNextPage: () => void
   onDeleteSupplier: (supplier: Supplier) => void
   onViewSupplier: (supplier: Supplier) => void
+  onScreenSupplier: (supplier: Supplier) => void
 }
 
 export function SuppliersTable({
@@ -26,6 +27,7 @@ export function SuppliersTable({
   onNextPage,
   onDeleteSupplier,
   onViewSupplier,
+  onScreenSupplier,
 }: SuppliersTableProps) {
   const { t } = useTranslation('home')
 
@@ -130,6 +132,7 @@ export function SuppliersTable({
                           type="button"
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/22 text-slate-200 transition duration-200 hover:-translate-y-0.5 hover:border-white/45 hover:bg-white/10 hover:text-white hover:shadow-[0_0_14px_rgba(238,247,255,0.22)]"
                           aria-label={t('table.actions.screening')}
+                          onClick={() => onScreenSupplier(supplier)}
                         >
                           <FiSearch className="h-3.5 w-3.5" />
                         </button>

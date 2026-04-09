@@ -1,0 +1,55 @@
+{
+  "modal": {
+    "title": "Screening sources",
+    "forensicTitle": "Forensic scan",
+    "subtitle": "Select the sources to analyze for this supplier.",
+    "supplierMeta": {
+      "taxId": "Tax ID",
+      "representatives": "Representatives"
+    },
+    "sources": {
+      "title": "Sources",
+      "interpol": "Interpol",
+      "secop": "SECOP",
+      "smv": "SMV"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "start": "Start screening",
+      "back": "Back",
+      "close": "Close"
+    }
+  },
+  "analyzing": {
+    "title": "Analyzing sources",
+    "subtitle": "This can take up to 30 seconds depending on the source.",
+    "status": {
+      "preparing": "Preparing request...",
+      "scanning": "Scanning {{source}}...",
+      "finalizing": "Finalizing results..."
+    }
+  },
+  "results": {
+    "title": "Screening results",
+    "subtitle": "Supplier: {{name}}",
+    "summary": {
+      "hits": "{{count}} hits",
+      "noHits": "No hits found."
+    },
+    "tabs": {
+      "all": "All"
+    },
+    "table": {
+      "empty": "No matches in this source.",
+      "fields": {
+        "title": "Finding",
+        "details": "Details",
+        "risk": "Risk"
+      }
+    }
+  },
+  "errors": {
+    "loadSupplier": "Unable to load supplier details.",
+    "tooManyRequests": "Too many requests. Please wait a moment and try again."
+  }
+}
