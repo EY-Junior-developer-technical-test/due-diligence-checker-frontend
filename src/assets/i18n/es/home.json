@@ -1,0 +1,58 @@
+{
+  "header": {
+    "workspaceTag": "Inteligencia de terceros",
+    "title": "Panel de proveedores",
+    "subtitle": "Monitorea terceros y prepara evaluaciones de due diligence en un solo lugar."
+  },
+  "toolbar": {
+    "searchPlaceholder": "Buscar por razón social, nombre comercial o RUC...",
+    "addSupplier": "Añadir proveedor",
+    "addSupplierSoon": "Crear un nuevo proveedor"
+  },
+  "table": {
+    "count": "{{count}} proveedores",
+    "empty": "No encontramos proveedores con ese criterio.",
+    "loading": "Cargando proveedores...",
+    "headers": {
+      "corporateName": "Razón social",
+      "taxIdentification": "Identificación fiscal",
+      "phoneNumber": "Teléfono",
+      "email": "Email",
+      "annualBillingAmount": "Facturación anual",
+      "actions": "Acciones"
+    },
+    "actions": {
+      "view": "Ver",
+      "edit": "Editar",
+      "screening": "Screening",
+      "delete": "Eliminar"
+    }
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {{page}}"
+  },
+  "user": {
+    "fallbackName": "Analista",
+    "options": "Opciones de usuario",
+    "exit": "Salir",
+    "logout": "Cerrar sesión"
+  },
+  "errors": {
+    "loadSuppliers": "No fue posible cargar los proveedores.",
+    "deleteSupplier": "No fue posible eliminar el proveedor.",
+    "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
+  },
+  "delete": {
+    "title": "Eliminar proveedor",
+    "subtitle": "Esta acción no se puede deshacer.",
+    "taxIdLabel": "RUC",
+    "actions": {
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleting": "Eliminando..."
+    }
+  }
+}
+

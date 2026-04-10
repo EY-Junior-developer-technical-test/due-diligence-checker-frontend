@@ -1,0 +1,96 @@
+{
+  "create": {
+    "title": "Create supplier",
+    "subtitle": "Register the supplier and optionally add representatives.",
+    "back": "Back",
+    "sections": {
+      "supplier": "Supplier details",
+      "representatives": "Representatives"
+    },
+    "fields": {
+      "corporateName": "Legal name",
+      "tradeName": "Trade name",
+      "taxIdentification": "Tax identification (11 digits)",
+      "phoneNumber": "Phone number",
+      "email": "Email",
+      "webSite": "Website",
+      "physicalAddress": "Physical address",
+      "country": "Country",
+      "annualBillingAmount": "Annual billing amount"
+    },
+    "placeholders": {
+      "country": "e.g. Peru",
+      "nationality": "Select a nationality",
+      "annualBillingAmount": "e.g. 1250000"
+    },
+    "actions": {
+      "addRepresentative": "Add representative",
+      "saveRepresentative": "Save",
+      "removeRepresentative": "Remove",
+      "cancel": "Cancel",
+      "submit": "Create supplier",
+      "submitting": "Creating..."
+    },
+    "representativeFields": {
+      "role": "Role",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "age": "Age",
+      "nationality": "Nationality"
+    },
+    "errors": {
+      "required": "This field is required.",
+      "taxId": "Must be exactly 11 digits.",
+      "nationality": "Use a 2-letter country code (e.g. PE).",
+      "age": "Age must be 18 or greater.",
+      "amount": "Amount must be 0 or greater.",
+      "createFailed": "Unable to create the supplier."
+    }
+  }
+  ,
+  "details": {
+    "back": "Back",
+    "loading": "Loading supplier...",
+    "titleFallback": "Supplier",
+    "description": "Complete information for {{name}} supplier.",
+    "sections": {
+      "supplier": "Supplier details",
+      "representatives": "Representatives"
+    },
+    "fields": {
+      "corporateName": "Legal name",
+      "tradeName": "Trade name",
+      "taxIdentification": "Tax identification",
+      "phoneNumber": "Phone number",
+      "email": "Email",
+      "webSite": "Website",
+      "physicalAddress": "Physical address",
+      "country": "Country",
+      "annualBillingAmount": "Annual billing amount"
+    },
+    "actions": {
+      "addRepresentative": "Add representative",
+      "editRepresentative": "Edit supplier",
+      "saveSupplier": "Save",
+      "cancelEdit": "Cancel"
+    },
+    "deleteRepresentative": {
+      "title": "Delete representative",
+      "subtitle": "This action cannot be undone.",
+      "metaLabel": "Role",
+      "actions": {
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting..."
+      }
+    },
+    "errors": {
+      "missingId": "Missing supplier id.",
+      "loadFailed": "Unable to load supplier details.",
+      "deleteFailed": "Unable to delete the representative.",
+      "upsertFailed": "Unable to save the representative.",
+      "updateSupplierFailed": "Unable to update the supplier.",
+      "tooManyRequests": "Too many requests. Please wait a moment and try again."
+    }
+  }
+}
