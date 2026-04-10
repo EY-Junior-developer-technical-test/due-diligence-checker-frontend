@@ -19,6 +19,11 @@ import type {
 const DEFAULT_VALUE = '-'
 
 export class SupplierAdapter {
+  private static normalizeCountry(value: string) {
+    const trimmed = value.trim()
+    return trimmed.length === 2 ? trimmed.toUpperCase() : trimmed
+  }
+
   static toQueryDto(query: SupplierSearchQuery): SupplierQueryRequestDto {
     return {
       page: query.page,
@@ -36,7 +41,7 @@ export class SupplierAdapter {
       email: command.email.trim(),
       webSite: command.webSite.trim(),
       physicalAddress: command.physicalAddress.trim(),
-      country: command.country.trim(),
+      country: this.normalizeCountry(command.country),
       annualBillingAmount: command.annualBillingAmount,
       representatives: command.representatives?.map((representative) => {
         const normalizedNationality = representative.nationality?.trim().toUpperCase()
@@ -76,7 +81,7 @@ export class SupplierAdapter {
       email: details.email.trim(),
       webSite: details.webSite.trim(),
       physicalAddress: details.physicalAddress.trim(),
-      country: details.country.trim(),
+      country: this.normalizeCountry(details.country),
       annualBillingAmount: details.annualBillingAmount,
     }
   }

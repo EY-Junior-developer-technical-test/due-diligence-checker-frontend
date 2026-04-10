@@ -7,6 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ApiError } from '../../shared/services/ApiError'
+import {
+  CountryDisplay,
+  CountrySelect,
+  findCountryOption,
+  getCountryOptions,
+} from '../../shared/components/CountrySelect'
 import { ScreeningHistoryModal } from '../../screening/components/ScreeningHistoryModal'
 import { supplierService } from '../services/SupplierService'
 import type { SupplierDetails, SupplierRepresentativeRecord } from '../model/supplier'
@@ -16,9 +22,10 @@ import { RepresentativeModal } from '../components/RepresentativeModal'
 import type { SupplierRepresentative } from '../model/supplier'
 
 export function SupplierDetailsPage() {
-  const { t } = useTranslation('suppliers')
+  const { t, i18n } = useTranslation('suppliers')
   const navigate = useNavigate()
   const { supplierId } = useParams<{ supplierId: string }>()
+  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
 
   const [supplier, setSupplier] = useState<SupplierDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -117,7 +124,13 @@ export function SupplierDetailsPage() {
       return
     }
 
-    setSupplierDraft({ ...supplier })
+    const options = getCountryOptions(locale)
+    const countryOption = findCountryOption(supplier.country ?? '', options)
+
+    setSupplierDraft({
+      ...supplier,
+      country: countryOption?.value ?? supplier.country,
+    })
     setSupplierErrors({})
     setSupplierSubmitError(null)
     setIsEditingSupplier(true)
@@ -329,15 +342,31 @@ export function SupplierDetailsPage() {
                     setSupplierDraft((current) => (current ? { ...current, webSite: value } : current))
                   }
                 />
-                <DataField
-                  label={t('details.fields.country')}
-                  value={(isEditingSupplier ? supplierDraft?.country : supplier.country) ?? ''}
-                  mode={isEditingSupplier ? 'edit' : 'read'}
-                  error={supplierErrors.country}
-                  onChange={(value) =>
-                    setSupplierDraft((current) => (current ? { ...current, country: value } : current))
-                  }
-                />
+	                <div>
+	                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+	                    <span>{t('details.fields.country')}</span>
+	                  </label>
+	                  {isEditingSupplier ? (
+	                    <CountrySelect
+	                      value={supplierDraft?.country ?? ''}
+	                      onChange={(value) =>
+	                        setSupplierDraft((current) => (current ? { ...current, country: value } : current))
+	                      }
+	                      placeholder={t('create.placeholders.country')}
+	                      hasError={Boolean(supplierErrors.country)}
+	                      isDisabled={isSupplierSubmitting}
+	                      inputId="supplier-country"
+	                      locale={locale}
+	                    />
+	                  ) : (
+	                    <div className="home-search-input w-full rounded-xl px-4 py-2.5 text-sm text-slate-100">
+	                      <CountryDisplay value={supplier.country ?? ''} locale={locale} />
+	                    </div>
+	                  )}
+	                  {supplierErrors.country ? (
+	                    <p className="mt-1 text-xs font-medium text-red-200">{supplierErrors.country}</p>
+	                  ) : null}
+	                </div>
                 <DataField
                   label={t('details.fields.annualBillingAmount')}
                   value={
