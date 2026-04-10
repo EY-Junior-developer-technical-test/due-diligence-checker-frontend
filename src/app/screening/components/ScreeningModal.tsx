@@ -4,15 +4,12 @@ import { FiX } from 'react-icons/fi'
 import { BsIncognito } from 'react-icons/bs'
 import { useTranslation } from 'react-i18next'
 
-import interpolLogo from '../../../assets/interpol-logo-768x768.png'
-import secopLogo from '../../../assets/GovColombiaMultas.png'
-import smvLogo from '../../../assets/OIP.webp'
-
 import { ApiError } from '../../shared/services/ApiError'
 import { supplierService } from '../../suppliers/services/SupplierService'
 import type { Supplier, SupplierDetails } from '../../suppliers/model/supplier'
 import { ScreeningSource, type ScreeningRunResult, type ScreeningSource as ScreeningSourceId } from '../model/screening'
 import type { SourceOption } from '../model/screeningUi'
+import { getScreeningSourceOptions } from '../model/sourceOptions'
 import { screeningService } from '../services/ScreeningService'
 import { StepSelect } from './steps/StepSelect'
 import { StepAnalyzing } from './steps/StepAnalyzing'
@@ -36,22 +33,16 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
 
   const [supplierDetails, setSupplierDetails] = useState<SupplierDetails | null>(null)
   const [supplierError, setSupplierError] = useState<ApiError | null>(null)
+  const [screeningError, setScreeningError] = useState<ApiError | null>(null)
 
-  const [selectedSources, setSelectedSources] = useState<ScreeningSourceId[]>([
-    ScreeningSource.Interpol,
-    ScreeningSource.Secop,
-  ])
+  const [selectedSources, setSelectedSources] = useState<ScreeningSourceId[]>([])
   const [isRunning, setIsRunning] = useState(false)
   const [result, setResult] = useState<ScreeningRunResult | null>(null)
-  const [activeTab, setActiveTab] = useState<ScreeningSourceId | 'all'>('all')
+  const [activeTab, setActiveTab] = useState<ScreeningSourceId>(ScreeningSource.Interpol)
   const [statusLine, setStatusLine] = useState(t('analyzing.status.preparing'))
 
   const options: SourceOption[] = useMemo(
-    () => [
-      { source: ScreeningSource.Interpol, label: t('modal.sources.interpol'), logo: interpolLogo },
-      { source: ScreeningSource.Secop, label: t('modal.sources.secop'), logo: secopLogo },
-      { source: ScreeningSource.Smv, label: t('modal.sources.smv'), logo: smvLogo },
-    ],
+    () => getScreeningSourceOptions(t),
     [t],
   )
 
@@ -95,10 +86,12 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
 
     setStep(1)
     setResult(null)
-    setActiveTab('all')
+    setActiveTab(ScreeningSource.Interpol)
     setIsRunning(false)
     setSupplierError(null)
+    setScreeningError(null)
     setSupplierDetails(null)
+    setSelectedSources([])
 
     supplierService
       .getById(supplier.id)
@@ -129,6 +122,8 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
 
     setIsRunning(true)
     setStep(2)
+    setScreeningError(null)
+    setActiveTab(selectedSources[0] ?? ScreeningSource.Interpol)
     setStatusLine(t('analyzing.status.preparing'))
 
     let statusTimer: number | null = null
@@ -144,17 +139,22 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
         idx += 1
       }, 1400)
 
-      const runResult = await screeningService.run({
-        supplierId: supplier.id,
-        sources: selectedSources,
-      })
+      const runResult = await screeningService.run({ supplierId: supplier.id, sources: selectedSources })
 
       setStatusLine(t('analyzing.status.finalizing'))
 
       await new Promise((resolve) => window.setTimeout(resolve, 500))
 
       setResult(runResult)
+      setActiveTab((current) => (selectedSources.includes(current) ? current : (selectedSources[0] ?? current)))
       setStep(3)
+    } catch (error) {
+      const apiError =
+        error instanceof ApiError
+          ? error
+          : new ApiError(t('errors.runFailed', { defaultValue: 'No se pudo ejecutar el screening.' }))
+      setScreeningError(apiError)
+      setStep(1)
     } finally {
       if (statusTimer) {
         window.clearInterval(statusTimer)
@@ -163,19 +163,6 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
     }
   }
 
-  const filteredFindings = useMemo(() => {
-    if (!result) {
-      return []
-    }
-
-    if (activeTab === 'all') {
-      return result.findings
-    }
-
-    return result.findings.filter((finding) => finding.source === activeTab)
-  }, [activeTab, result])
-
-  const totalHits = result?.findings.length ?? 0
   const supplierName = supplier?.corporateName ?? ''
 
   const header = useMemo(() => {
@@ -185,8 +172,8 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
 
     if (step === 3) {
       return {
-        title: t('results.title'),
-        subtitle: t('results.subtitle', { name: supplierName }),
+        title: supplierName || t('results.title'),
+        subtitle: t('results.title'),
       }
     }
 
@@ -213,7 +200,7 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
       <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
 
       <div
-        className={`glass-dialog-bright relative w-[min(94vw,56rem)] rounded-[2rem] p-8 shadow-[0_56px_120px_rgba(2,8,18,0.72)] transition-transform duration-200 ${
+        className={`glass-dialog-bright relative w-[min(98vw,82rem)] rounded-[2rem] p-8 shadow-[0_56px_120px_rgba(2,8,18,0.72)] transition-transform duration-200 ${
           isVisible ? 'translate-y-0 scale-100' : 'translate-y-2 scale-[0.98]'
         }`}
       >
@@ -222,7 +209,8 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
             <div>
               <div className="flex items-center gap-3">
                 <BsIncognito
-                  className="h-7 w-7 text-ey-yellow drop-shadow-[0_0_22px_rgba(255,230,0,0.34)]"
+                  className="h-8 w-8 drop-shadow-[0_0_28px_rgba(255,230,0,0.5)]"
+                  style={{ color: 'var(--ey-yellow)' }}
                   aria-hidden="true"
                 />
                 <div>
@@ -251,6 +239,7 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
                   supplier={supplier}
                   supplierDetails={supplierDetails}
                   supplierError={supplierError}
+                  screeningError={screeningError}
                   options={options}
                   selectedSources={selectedSources}
                   isRunning={isRunning}
@@ -265,18 +254,14 @@ export function ScreeningModal({ isOpen, supplier, onClose }: ScreeningModalProp
                   options={options}
                   statusLine={statusLine}
                   isRunning={isRunning}
-                  onBack={() => setStep(1)}
                 />
               ) : null}
 
               {step === 3 ? (
                 <StepResults
-                  supplier={supplier}
                   options={options}
                   selectedSources={selectedSources}
-                  totalHits={totalHits}
                   result={result}
-                  filteredFindings={filteredFindings}
                   activeTab={activeTab}
                   onTabChange={setActiveTab}
                   onBack={() => setStep(1)}

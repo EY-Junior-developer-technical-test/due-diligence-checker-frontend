@@ -22,7 +22,7 @@
   },
   "analyzing": {
     "title": "Analizando fuentes",
-    "subtitle": "Puede tardar hasta 30 segundos dependiendo de la fuente.",
+    "subtitle": "Estamos revisando las fuentes seleccionadas.",
     "status": {
       "preparing": "Preparando solicitud...",
       "scanning": "Analizando {{source}}...",

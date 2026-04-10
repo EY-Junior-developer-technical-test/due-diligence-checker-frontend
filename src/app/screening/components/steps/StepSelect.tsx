@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { FiCheck } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next'
 
@@ -6,11 +6,13 @@ import type { ApiError } from '../../../shared/services/ApiError'
 import type { Supplier, SupplierDetails } from '../../../suppliers/model/supplier'
 import type { ScreeningSource as ScreeningSourceId } from '../../model/screening'
 import type { SourceOption } from '../../model/screeningUi'
+import { ScreeningGlobe } from '../ScreeningGlobe'
 
 type StepSelectProps = {
   supplier: Supplier
   supplierDetails: SupplierDetails | null
   supplierError: ApiError | null
+  screeningError?: ApiError | null
   options: SourceOption[]
   selectedSources: ScreeningSourceId[]
   isRunning: boolean
@@ -22,6 +24,7 @@ export function StepSelect({
   supplier,
   supplierDetails,
   supplierError,
+  screeningError,
   options,
   selectedSources,
   isRunning,
@@ -78,6 +81,15 @@ export function StepSelect({
             <p className="mt-1 text-red-100">{supplierError.message}</p>
           </div>
         ) : null}
+
+        {screeningError ? (
+          <div className="mt-4 rounded-2xl border border-red-300/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+            <p className="font-semibold text-red-50">
+              {screeningError.title ?? `Error ${screeningError.status ?? ''}`.trim()}
+            </p>
+            <p className="mt-1 text-red-100">{screeningError.message}</p>
+          </div>
+        ) : null}
       </div>
 
       <div className="mt-6 w-full rounded-3xl border border-white/14 bg-white/[0.03] p-6 shadow-[0_18px_42px_rgba(2,8,18,0.2)]">
@@ -126,7 +138,7 @@ export function StepSelect({
           </div>
 
           <div className="flex flex-col items-center justify-center gap-4">
-            <SelectedSourcesGlobe logos={selectedOptionLogos} isActive={selectedOptionLogos.length > 0} />
+            <ScreeningGlobe logos={selectedOptionLogos} isActive={selectedOptionLogos.length > 0} size="lg" />
             <button
               type="button"
               className="home-add-button inline-flex items-center justify-center rounded-xl px-7 py-3 text-base font-semibold text-slate-900 disabled:opacity-60"
@@ -137,99 +149,6 @@ export function StepSelect({
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-function SelectedSourcesGlobe({ logos, isActive }: { logos: string[]; isActive: boolean }) {
-  const count = Math.min(3, logos.length)
-  const [isRevealed, setIsRevealed] = useState(false)
-
-  useEffect(() => {
-    setIsRevealed(false)
-    const frame = requestAnimationFrame(() => setIsRevealed(true))
-    return () => cancelAnimationFrame(frame)
-  }, [count, logos.join('|')])
-
-  const slots: Array<{ key: string; src: string; className: string }> = []
-
-  if (count === 1) {
-    slots.push({
-      key: 'slot-0',
-      src: logos[0],
-      className:
-        'left-1/2 top-1/2 h-11 w-11 -translate-x-1/2 -translate-y-1/2',
-    })
-  }
-
-  if (count === 2) {
-    slots.push(
-      {
-        key: 'slot-0',
-        src: logos[0],
-        className:
-          'left-[34%] top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2',
-      },
-      {
-        key: 'slot-1',
-        src: logos[1],
-        className:
-          'left-[66%] top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2',
-      },
-    )
-  }
-
-  if (count === 3) {
-    slots.push(
-      {
-        key: 'slot-0',
-        src: logos[0],
-        className:
-          'left-1/2 top-[28%] h-9 w-9 -translate-x-1/2 -translate-y-1/2',
-      },
-      {
-        key: 'slot-1',
-        src: logos[1],
-        className:
-          'left-[35%] top-[66%] h-9 w-9 -translate-x-1/2 -translate-y-1/2',
-      },
-      {
-        key: 'slot-2',
-        src: logos[2],
-        className:
-          'left-[65%] top-[66%] h-9 w-9 -translate-x-1/2 -translate-y-1/2',
-      },
-    )
-  }
-
-  return (
-    <div className="scan-orbit shrink-0">
-      <div
-        className={`relative h-[6.75rem] w-[6.75rem] overflow-hidden rounded-full border bg-white/[0.06] shadow-[0_18px_44px_rgba(2,8,18,0.35)] transition ${
-          isActive
-            ? 'border-yellow-200/30 ring-1 ring-yellow-200/25 shadow-[0_18px_44px_rgba(2,8,18,0.35),0_0_28px_rgba(255,230,0,0.16)]'
-            : 'border-white/18'
-        }`}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/8 via-white/0 to-sky-200/10" />
-
-        {count === 0 ? (
-          <div className="absolute inset-0 flex items-center justify-center text-xs font-semibold text-slate-300/80">
-            0
-          </div>
-        ) : null}
-
-        {slots.map((slot) => (
-          <img
-            key={`${slot.key}-${count}`}
-            src={slot.src}
-            alt=""
-            className={`absolute rounded-2xl object-contain transition-all duration-500 ease-out ${slot.className} ${
-              isRevealed ? 'opacity-100 blur-0' : 'opacity-0 blur-[3px]'
-            }`}
-          />
-        ))}
       </div>
     </div>
   )

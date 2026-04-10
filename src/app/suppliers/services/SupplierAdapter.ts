@@ -40,12 +40,13 @@ export class SupplierAdapter {
       annualBillingAmount: command.annualBillingAmount,
       representatives: command.representatives?.map((representative) => {
         const normalizedNationality = representative.nationality?.trim().toUpperCase()
+        const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
         return {
           role: representative.role.trim(),
           firstName: representative.firstName.trim(),
           lastName: representative.lastName.trim(),
-          age: representative.age,
+          ...(age !== undefined ? { age } : {}),
           ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
         }
       }),
@@ -56,12 +57,13 @@ export class SupplierAdapter {
     representative: SupplierRepresentative,
   ): SupplierRepresentativeCreateRequestDto {
     const normalizedNationality = representative.nationality?.trim().toUpperCase()
+    const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
     return {
       role: representative.role.trim(),
       firstName: representative.firstName.trim(),
       lastName: representative.lastName.trim(),
-      age: representative.age,
+      ...(age !== undefined ? { age } : {}),
       ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
     }
   }
@@ -247,13 +249,15 @@ export class SupplierAdapter {
     const nationalityRaw = dto?.nationality
     const nationality =
       nationalityRaw === undefined || nationalityRaw === null ? undefined : String(nationalityRaw).trim()
+    const rawAge = dto?.age
+    const age = typeof rawAge === 'number' && Number.isFinite(rawAge) && rawAge > 0 ? rawAge : undefined
 
     return {
       id,
       role: this.normalizeText(dto?.role),
       firstName: this.normalizeText(dto?.firstName),
       lastName: this.normalizeText(dto?.lastName),
-      age: this.normalizeNumber(typeof dto?.age === 'number' ? dto.age : 0),
+      ...(age !== undefined ? { age } : {}),
       ...(nationality ? { nationality } : {}),
     }
   }

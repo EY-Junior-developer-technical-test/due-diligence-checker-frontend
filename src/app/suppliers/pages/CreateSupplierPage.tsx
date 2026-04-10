@@ -283,7 +283,9 @@ export function CreateSupplierPage() {
                         {representative.firstName} {representative.lastName}
                       </p>
                       <p className="mt-1 text-sm text-slate-300">
-                        {representative.role} · {representative.age} · {representative.nationality}
+                        {[representative.role, representative.age, representative.nationality]
+                          .filter((value) => value !== undefined && value !== null && String(value).trim().length > 0)
+                          .join(' · ')}
                       </p>
                     </div>
 

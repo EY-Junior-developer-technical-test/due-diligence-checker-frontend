@@ -22,7 +22,7 @@
   },
   "analyzing": {
     "title": "Analyzing sources",
-    "subtitle": "This can take up to 30 seconds depending on the source.",
+    "subtitle": "Reviewing the selected sources.",
     "status": {
       "preparing": "Preparing request...",
       "scanning": "Scanning {{source}}...",

@@ -99,11 +99,15 @@ export function RepresentativeModal({
   const validateField = (key: keyof RepresentativeFormState, value: string): string | undefined => {
     const trimmedValue = value.trim()
 
-    if (key !== 'nationality' && !trimmedValue) {
+    if (key !== 'nationality' && key !== 'age' && !trimmedValue) {
       return t('create.errors.required')
     }
 
     if (key === 'age') {
+      if (!trimmedValue) {
+        return
+      }
+
       const ageValue = Number(trimmedValue)
       if (!Number.isFinite(ageValue) || ageValue < 18) {
         return t('create.errors.age')
@@ -126,12 +130,17 @@ export function RepresentativeModal({
   const validateAll = (): RepresentativeFormErrors => {
     const nextErrors: RepresentativeFormErrors = {}
 
-    ;(['role', 'firstName', 'lastName', 'age'] as const).forEach((key) => {
+    ;(['role', 'firstName', 'lastName'] as const).forEach((key) => {
       const error = validateField(key, form[key])
       if (error) {
         nextErrors[key] = error
       }
     })
+
+    const ageError = validateField('age', form.age)
+    if (ageError) {
+      nextErrors.age = ageError
+    }
 
     const nationalityError = validateField('nationality', form.nationality)
     if (nationalityError) {
@@ -180,11 +189,13 @@ export function RepresentativeModal({
       return
     }
 
+    const ageValue = form.age.trim()
+
     onSubmit({
       role: form.role.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
-      age: Number(form.age),
+      ...(ageValue ? { age: Number(ageValue) } : {}),
       ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
     })
 

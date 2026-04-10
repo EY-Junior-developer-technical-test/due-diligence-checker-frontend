@@ -1,70 +1,38 @@
 import {
-  ScreeningSource,
-  type ScreeningFinding,
   type ScreeningRunCommand,
   type ScreeningRunResult,
-  type ScreeningSource as ScreeningSourceId,
 } from '../model/screening'
+import { BaseService } from '../../shared/services/BaseService'
 
-const delay = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms))
-
-function generateFindings(sources: ScreeningSourceId[]): ScreeningFinding[] {
-  const base: Record<ScreeningSourceId, ScreeningFinding[]> = {
-    [ScreeningSource.Interpol]: [
-      {
-        id: 'interpol-1',
-        source: ScreeningSource.Interpol,
-        title: 'Possible match found',
-        details: 'Name similarity exceeded threshold and requires manual review.',
-        risk: 'high',
-      },
-    ],
-    [ScreeningSource.Secop]: [
-      {
-        id: 'secop-1',
-        source: ScreeningSource.Secop,
-        title: 'Contract participation detected',
-        details: 'Supplier appears in procurement records with matching tax ID.',
-        risk: 'medium',
-      },
-    ],
-    [ScreeningSource.Smv]: [
-      {
-        id: 'smv-1',
-        source: ScreeningSource.Smv,
-        title: 'Regulatory mention',
-        details: 'Entry found in public market supervision bulletin.',
-        risk: 'low',
-      },
-    ],
-  }
-
-  return sources.flatMap((source) => {
-    const hits = base[source] ?? []
-    if (Math.random() < 0.45) {
-      return hits
-    }
-    return []
-  })
+type ScreeningRunRequestDto = {
+  sources: ScreeningRunCommand['sources']
 }
 
-class ScreeningService {
+class ScreeningService extends BaseService {
+  constructor() {
+    super('/suppliers')
+  }
+
   async run(command: ScreeningRunCommand): Promise<ScreeningRunResult> {
-    const startedAt = new Date().toISOString()
+    const payload: ScreeningRunRequestDto = { sources: command.sources }
+    return this.post<ScreeningRunResult, ScreeningRunRequestDto>(
+      `/${encodeURIComponent(command.supplierId)}/screenings`,
+      payload,
+    )
+  }
 
-    await delay(2200)
-    await delay(900)
+  async listBySupplierId(
+    supplierId: string,
+    query: { page: number; limit: number },
+  ): Promise<ScreeningRunResult[]> {
+    const params = new URLSearchParams({
+      page: String(query.page),
+      limit: String(query.limit),
+    })
 
-    const findings = generateFindings(command.sources)
-    const completedAt = new Date().toISOString()
-
-    return {
-      supplierId: command.supplierId,
-      startedAt,
-      completedAt,
-      sources: command.sources,
-      findings,
-    }
+    return this.get<ScreeningRunResult[]>(
+      `/${encodeURIComponent(supplierId)}/screenings?${params.toString()}`,
+    )
   }
 }
 

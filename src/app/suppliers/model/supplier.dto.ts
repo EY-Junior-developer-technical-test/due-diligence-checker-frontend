@@ -47,7 +47,7 @@ export type SupplierRepresentativeCreateRequestDto = {
   role: string
   firstName: string
   lastName: string
-  age: number
+  age?: number
   nationality?: string
 }
 

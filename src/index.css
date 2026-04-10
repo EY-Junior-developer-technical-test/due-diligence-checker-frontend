@@ -553,6 +553,21 @@ body {
 	pointer-events: none;
 }
 
+.analyzing-surface {
+	border: 1px solid rgba(240, 248, 255, 0.34);
+	background:
+		radial-gradient(circle at 32% 18%, rgba(255, 230, 0, 0.22), transparent 56%),
+		radial-gradient(circle at 72% 12%, rgba(126, 212, 255, 0.22), transparent 56%),
+		linear-gradient(145deg, rgba(18, 26, 44, 0.78), rgba(12, 18, 30, 0.6)),
+		linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+	box-shadow:
+		0 52px 110px rgba(2, 8, 18, 0.75),
+		0 1px 0 rgba(255, 255, 255, 0.32) inset,
+		0 -1px 0 rgba(255, 255, 255, 0.12) inset,
+		0 0 0 1px rgba(255, 230, 0, 0.12);
+	backdrop-filter: blur(22px) saturate(140%);
+}
+
 .scan-orbit {
 	position: relative;
 	isolation: isolate;
@@ -590,6 +605,34 @@ button:not(:disabled),
 a,
 [role="button"] {
 	cursor: pointer;
+}
+
+.ey-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: rgba(255, 255, 255, 0.22) rgba(255, 255, 255, 0.06);
+}
+
+.ey-scrollbar::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+.ey-scrollbar::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.04);
+	border-radius: 999px;
+}
+
+.ey-scrollbar::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	border: 2px solid rgba(10, 15, 25, 0.6);
+	background: linear-gradient(180deg, rgba(255, 230, 0, 0.38), rgba(126, 212, 255, 0.26));
+	box-shadow:
+		0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+		0 10px 24px rgba(2, 8, 18, 0.45);
+}
+
+.ey-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg, rgba(255, 230, 0, 0.5), rgba(126, 212, 255, 0.34));
 }
 
 @keyframes star-shimmer {
@@ -635,5 +678,20 @@ a,
 	to {
 		opacity: 1;
 		transform: translateY(0) scale(1);
+	}
+}
+
+.globe-blink {
+	animation: globe-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes globe-blink {
+	0%,
+	100% {
+		filter: brightness(1);
+	}
+
+	50% {
+		filter: brightness(1.12);
 	}
 }

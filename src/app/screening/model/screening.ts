@@ -11,19 +11,52 @@ export type ScreeningRunCommand = {
   sources: ScreeningSource[]
 }
 
-export type ScreeningFinding = {
-  id: string
-  source: ScreeningSource
-  title: string
-  details: string
-  risk: 'low' | 'medium' | 'high'
+export type InterpolHit = {
+  familyName: string
+  forename: string
+  gender?: string
+  dateOfBirth?: string
+  placeOfBirth?: string
+  nationality?: string
+  charges?: string
+}
+
+export type SmvHit = {
+  date?: string
+  resolution?: string
+  summary?: string
+  type?: string
+  amount?: string
+  withAppeal?: string
+  resolutiveResolutionNumber?: string
+  resolutiveResolutionDate?: string
+}
+
+export type SecopHit = {
+  entityName?: string
+  entityTaxId?: string
+  level?: string
+  order?: string
+  municipality?: string
+  resolutionNumber?: string
+  contractNumber?: string
+  contractorDocument?: string
+  contractorName?: string
+  sanctionAmount?: number
+  publishedAt?: string
+  finalizedAt?: string
+  loadedAt?: string
+  processUrl?: string
+  [key: string]: unknown
 }
 
 export type ScreeningRunResult = {
-  supplierId: string
-  startedAt: string
-  completedAt: string
-  sources: ScreeningSource[]
-  findings: ScreeningFinding[]
+  supplierScreeningId: number
+  supplierId: number
+  executedAt: string
+  hasHits: boolean
+  sourcesChecked: string
+  interpolHits: InterpolHit[]
+  secopHits: SecopHit[]
+  smvHits: SmvHit[]
 }
-

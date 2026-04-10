@@ -11,7 +11,7 @@ type RepresentativeCardProps = {
 export function RepresentativeCard({ representative, onEdit, onDelete }: RepresentativeCardProps) {
   const metaParts = [
     representative.role,
-    String(representative.age),
+    typeof representative.age === 'number' ? String(representative.age) : '',
     representative.nationality,
   ].filter((value) => typeof value === 'string' && value.trim().length > 0)
 
