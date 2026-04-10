@@ -20,6 +20,7 @@
     },
     "placeholders": {
       "country": "Ej: Perú",
+      "nationality": "Selecciona una nacionalidad",
       "annualBillingAmount": "Ej: 1250000"
     },
     "actions": {

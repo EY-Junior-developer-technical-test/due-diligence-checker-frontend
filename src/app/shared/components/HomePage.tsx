@@ -11,6 +11,7 @@ import { SuppliersTable } from '../../suppliers/components/SuppliersTable'
 import { SuppliersToolbar } from '../../suppliers/components/SuppliersToolbar'
 import { UserMenuCard } from './UserMenuCard'
 import { DeleteSupplierModal } from '../../suppliers/components/DeleteSupplierModal'
+import { ScreeningModal } from '../../screening/components/ScreeningModal'
 
 export function HomePage() {
   const { t, i18n } = useTranslation('home')
@@ -29,6 +30,7 @@ export function HomePage() {
   const [isDeleteSubmitting, setIsDeleteSubmitting] = useState(false)
   const [deleteError, setDeleteError] = useState<ApiError | null>(null)
   const [reloadKey, setReloadKey] = useState(0)
+  const [supplierToScreen, setSupplierToScreen] = useState<Supplier | null>(null)
 
   const currentLanguage = i18n.resolvedLanguage ?? i18n.language
 
@@ -171,6 +173,7 @@ export function HomePage() {
               setDeleteError(null)
             }}
             onViewSupplier={(supplier) => navigate(`/suppliers/${supplier.id}`)}
+            onScreenSupplier={(supplier) => setSupplierToScreen(supplier)}
           />
         </section>
 
@@ -224,6 +227,12 @@ export function HomePage() {
         confirmLabel={t('delete.actions.confirm')}
         cancelLabel={t('delete.actions.cancel')}
         submittingLabel={t('delete.actions.deleting')}
+      />
+
+      <ScreeningModal
+        isOpen={Boolean(supplierToScreen)}
+        supplier={supplierToScreen}
+        onClose={() => setSupplierToScreen(null)}
       />
     </main>
   )

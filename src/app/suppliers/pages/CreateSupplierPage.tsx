@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { ApiError } from '../../shared/services/ApiError'
+import { CountrySelect } from '../../shared/components/CountrySelect'
 import { supplierService } from '../services/SupplierService'
 import type { SupplierCreateCommand, SupplierRepresentative } from '../model/supplier'
 import { RepresentativeModal } from '../components/RepresentativeModal'
@@ -35,8 +36,9 @@ const REQUIRED_FIELDS: Array<keyof SupplierFormState> = [
 ]
 
 export function CreateSupplierPage() {
-  const { t } = useTranslation('suppliers')
+  const { t, i18n } = useTranslation('suppliers')
   const navigate = useNavigate()
+  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
 
   const [form, setForm] = useState<SupplierFormState>({
     corporateName: '',
@@ -210,13 +212,20 @@ export function CreateSupplierPage() {
                 onChange={(value) => setField('webSite', value)}
                 placeholder="https://example.com"
               />
-              <InputField
-                label={t('create.fields.country')}
-                value={form.country}
-                error={errors.country}
-                onChange={(value) => setField('country', value)}
-                placeholder={t('create.placeholders.country')}
-              />
+	              <div>
+	                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+	                  {t('create.fields.country')}
+	                </label>
+	                <CountrySelect
+	                  value={form.country}
+	                  onChange={(value) => setField('country', value)}
+	                  placeholder={t('create.placeholders.country')}
+	                  hasError={Boolean(errors.country)}
+	                  inputId="supplier-country"
+	                  locale={locale}
+	                />
+	                {errors.country ? <p className="mt-1 text-xs font-medium text-red-200">{errors.country}</p> : null}
+	              </div>
               <InputField
                 label={t('create.fields.annualBillingAmount')}
                 value={form.annualBillingAmount}
@@ -283,7 +292,9 @@ export function CreateSupplierPage() {
                         {representative.firstName} {representative.lastName}
                       </p>
                       <p className="mt-1 text-sm text-slate-300">
-                        {representative.role} · {representative.age} · {representative.nationality}
+                        {[representative.role, representative.age, representative.nationality]
+                          .filter((value) => value !== undefined && value !== null && String(value).trim().length > 0)
+                          .join(' · ')}
                       </p>
                     </div>
 

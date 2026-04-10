@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { FiX } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next'
 
+import { CountrySelect } from '../../shared/components/CountrySelect'
 import type { SupplierRepresentative } from '../model/supplier'
 
 type RepresentativeModalProps = {
@@ -37,7 +38,8 @@ export function RepresentativeModal({
   closeOnSubmit = true,
   isSubmitting = false,
 }: RepresentativeModalProps) {
-  const { t } = useTranslation('suppliers')
+  const { t, i18n } = useTranslation('suppliers')
+  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -99,11 +101,15 @@ export function RepresentativeModal({
   const validateField = (key: keyof RepresentativeFormState, value: string): string | undefined => {
     const trimmedValue = value.trim()
 
-    if (key !== 'nationality' && !trimmedValue) {
+    if (key !== 'nationality' && key !== 'age' && !trimmedValue) {
       return t('create.errors.required')
     }
 
     if (key === 'age') {
+      if (!trimmedValue) {
+        return
+      }
+
       const ageValue = Number(trimmedValue)
       if (!Number.isFinite(ageValue) || ageValue < 18) {
         return t('create.errors.age')
@@ -126,12 +132,17 @@ export function RepresentativeModal({
   const validateAll = (): RepresentativeFormErrors => {
     const nextErrors: RepresentativeFormErrors = {}
 
-    ;(['role', 'firstName', 'lastName', 'age'] as const).forEach((key) => {
+    ;(['role', 'firstName', 'lastName'] as const).forEach((key) => {
       const error = validateField(key, form[key])
       if (error) {
         nextErrors[key] = error
       }
     })
+
+    const ageError = validateField('age', form.age)
+    if (ageError) {
+      nextErrors.age = ageError
+    }
 
     const nationalityError = validateField('nationality', form.nationality)
     if (nationalityError) {
@@ -180,11 +191,13 @@ export function RepresentativeModal({
       return
     }
 
+    const ageValue = form.age.trim()
+
     onSubmit({
       role: form.role.trim(),
       firstName: form.firstName.trim(),
       lastName: form.lastName.trim(),
-      age: Number(form.age),
+      ...(ageValue ? { age: Number(ageValue) } : {}),
       ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
     })
 
@@ -236,7 +249,7 @@ export function RepresentativeModal({
           </button>
         </header>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+	        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field
             label={t('create.representativeFields.role')}
             value={form.role}
@@ -278,19 +291,27 @@ export function RepresentativeModal({
               setForm((current) => ({ ...current, lastName: value }))
             }}
           />
-          <Field
-            label={t('create.representativeFields.nationality')}
-            value={form.nationality}
-            error={errors.nationality}
-            disabled={isSubmitting}
-            onChange={(value) => {
-              setTouched((current) => ({ ...current, nationality: true }))
-              setForm((current) => ({ ...current, nationality: value.toUpperCase() }))
-            }}
-            className="sm:col-span-2"
-            placeholder="PE"
-          />
-        </div>
+	          <div className="sm:col-span-2">
+	            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+	              {t('create.representativeFields.nationality')}
+	            </label>
+	            <CountrySelect
+	              value={form.nationality}
+	              onChange={(value) => {
+	                setTouched((current) => ({ ...current, nationality: true }))
+	                setForm((current) => ({ ...current, nationality: value }))
+	              }}
+	              placeholder={t('create.placeholders.nationality')}
+	              hasError={Boolean(errors.nationality)}
+	              isDisabled={isSubmitting}
+	              inputId="representative-nationality"
+	              locale={locale}
+	            />
+	            {errors.nationality ? (
+	              <p className="mt-1 text-xs font-medium text-red-200">{errors.nationality}</p>
+	            ) : null}
+	          </div>
+	        </div>
 
         <footer className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-end">
           <button

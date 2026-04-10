@@ -1,11 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { FiArrowLeft, FiEdit2 } from 'react-icons/fi'
+import { LuHistory } from 'react-icons/lu'
 import { FaPhone, FaVoicemail } from 'react-icons/fa'
 import { FaPeopleGroup } from 'react-icons/fa6'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { ApiError } from '../../shared/services/ApiError'
+import {
+  CountryDisplay,
+  CountrySelect,
+  findCountryOption,
+  getCountryOptions,
+} from '../../shared/components/CountrySelect'
+import { ScreeningHistoryModal } from '../../screening/components/ScreeningHistoryModal'
 import { supplierService } from '../services/SupplierService'
 import type { SupplierDetails, SupplierRepresentativeRecord } from '../model/supplier'
 import { RepresentativeCard } from '../components/RepresentativeCard'
@@ -14,9 +22,10 @@ import { RepresentativeModal } from '../components/RepresentativeModal'
 import type { SupplierRepresentative } from '../model/supplier'
 
 export function SupplierDetailsPage() {
-  const { t } = useTranslation('suppliers')
+  const { t, i18n } = useTranslation('suppliers')
   const navigate = useNavigate()
   const { supplierId } = useParams<{ supplierId: string }>()
+  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
 
   const [supplier, setSupplier] = useState<SupplierDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -26,6 +35,7 @@ export function SupplierDetailsPage() {
   const [supplierErrors, setSupplierErrors] = useState<Record<string, string>>({})
   const [isSupplierSubmitting, setIsSupplierSubmitting] = useState(false)
   const [supplierSubmitError, setSupplierSubmitError] = useState<ApiError | null>(null)
+  const [isScreeningHistoryOpen, setIsScreeningHistoryOpen] = useState(false)
 
   const [representativeToDelete, setRepresentativeToDelete] =
     useState<SupplierRepresentativeRecord | null>(null)
@@ -114,7 +124,13 @@ export function SupplierDetailsPage() {
       return
     }
 
-    setSupplierDraft({ ...supplier })
+    const options = getCountryOptions(locale)
+    const countryOption = findCountryOption(supplier.country ?? '', options)
+
+    setSupplierDraft({
+      ...supplier,
+      country: countryOption?.value ?? supplier.country,
+    })
     setSupplierErrors({})
     setSupplierSubmitError(null)
     setIsEditingSupplier(true)
@@ -219,16 +235,28 @@ export function SupplierDetailsPage() {
             </div>
 
             <div className="mt-1 self-start">
-              {!isEditingSupplier ? (
-                <button
-                  type="button"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/18 bg-white/[0.06] text-slate-100 transition hover:bg-white/[0.1]"
-                  onClick={startEditingSupplier}
-                  aria-label={t('details.actions.editRepresentative')}
-                  title={t('details.actions.editRepresentative')}
-                >
-                  <FiEdit2 className="h-4 w-4" aria-hidden="true" />
-                </button>
+              {!isEditingSupplier && supplier ? (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/18 bg-white/[0.06] text-slate-100 transition hover:bg-white/[0.1]"
+                    onClick={() => setIsScreeningHistoryOpen(true)}
+                    aria-label={t('details.actions.screeningHistory', { defaultValue: 'Historial de screenings' })}
+                    title={t('details.actions.screeningHistory', { defaultValue: 'Historial de screenings' })}
+                  >
+                    <LuHistory className="h-4 w-4" aria-hidden="true" />
+                  </button>
+
+                  <button
+                    type="button"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/18 bg-white/[0.06] text-slate-100 transition hover:bg-white/[0.1]"
+                    onClick={startEditingSupplier}
+                    aria-label={t('details.actions.editRepresentative')}
+                    title={t('details.actions.editRepresentative')}
+                  >
+                    <FiEdit2 className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
               ) : null}
             </div>
           </div>
@@ -314,15 +342,31 @@ export function SupplierDetailsPage() {
                     setSupplierDraft((current) => (current ? { ...current, webSite: value } : current))
                   }
                 />
-                <DataField
-                  label={t('details.fields.country')}
-                  value={(isEditingSupplier ? supplierDraft?.country : supplier.country) ?? ''}
-                  mode={isEditingSupplier ? 'edit' : 'read'}
-                  error={supplierErrors.country}
-                  onChange={(value) =>
-                    setSupplierDraft((current) => (current ? { ...current, country: value } : current))
-                  }
-                />
+	                <div>
+	                  <label className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-slate-300">
+	                    <span>{t('details.fields.country')}</span>
+	                  </label>
+	                  {isEditingSupplier ? (
+	                    <CountrySelect
+	                      value={supplierDraft?.country ?? ''}
+	                      onChange={(value) =>
+	                        setSupplierDraft((current) => (current ? { ...current, country: value } : current))
+	                      }
+	                      placeholder={t('create.placeholders.country')}
+	                      hasError={Boolean(supplierErrors.country)}
+	                      isDisabled={isSupplierSubmitting}
+	                      inputId="supplier-country"
+	                      locale={locale}
+	                    />
+	                  ) : (
+	                    <div className="home-search-input w-full rounded-xl px-4 py-2.5 text-sm text-slate-100">
+	                      <CountryDisplay value={supplier.country ?? ''} locale={locale} />
+	                    </div>
+	                  )}
+	                  {supplierErrors.country ? (
+	                    <p className="mt-1 text-xs font-medium text-red-200">{supplierErrors.country}</p>
+	                  ) : null}
+	                </div>
                 <DataField
                   label={t('details.fields.annualBillingAmount')}
                   value={
@@ -491,6 +535,12 @@ export function SupplierDetailsPage() {
             })
             .finally(() => setIsRepresentativeSubmitting(false))
         }}
+      />
+
+      <ScreeningHistoryModal
+        isOpen={isScreeningHistoryOpen}
+        supplier={supplier}
+        onClose={() => setIsScreeningHistoryOpen(false)}
       />
 
       <DeleteSupplierModal

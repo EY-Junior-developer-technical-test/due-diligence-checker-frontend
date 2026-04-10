@@ -8,7 +8,7 @@ export type SupplierRepresentative = {
   role: string
   firstName: string
   lastName: string
-  age: number
+  age?: number
   nationality?: string
 }
 

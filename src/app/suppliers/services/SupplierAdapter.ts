@@ -19,6 +19,11 @@ import type {
 const DEFAULT_VALUE = '-'
 
 export class SupplierAdapter {
+  private static normalizeCountry(value: string) {
+    const trimmed = value.trim()
+    return trimmed.length === 2 ? trimmed.toUpperCase() : trimmed
+  }
+
   static toQueryDto(query: SupplierSearchQuery): SupplierQueryRequestDto {
     return {
       page: query.page,
@@ -36,16 +41,17 @@ export class SupplierAdapter {
       email: command.email.trim(),
       webSite: command.webSite.trim(),
       physicalAddress: command.physicalAddress.trim(),
-      country: command.country.trim(),
+      country: this.normalizeCountry(command.country),
       annualBillingAmount: command.annualBillingAmount,
       representatives: command.representatives?.map((representative) => {
         const normalizedNationality = representative.nationality?.trim().toUpperCase()
+        const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
         return {
           role: representative.role.trim(),
           firstName: representative.firstName.trim(),
           lastName: representative.lastName.trim(),
-          age: representative.age,
+          ...(age !== undefined ? { age } : {}),
           ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
         }
       }),
@@ -56,12 +62,13 @@ export class SupplierAdapter {
     representative: SupplierRepresentative,
   ): SupplierRepresentativeCreateRequestDto {
     const normalizedNationality = representative.nationality?.trim().toUpperCase()
+    const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
     return {
       role: representative.role.trim(),
       firstName: representative.firstName.trim(),
       lastName: representative.lastName.trim(),
-      age: representative.age,
+      ...(age !== undefined ? { age } : {}),
       ...(normalizedNationality ? { nationality: normalizedNationality } : {}),
     }
   }
@@ -74,7 +81,7 @@ export class SupplierAdapter {
       email: details.email.trim(),
       webSite: details.webSite.trim(),
       physicalAddress: details.physicalAddress.trim(),
-      country: details.country.trim(),
+      country: this.normalizeCountry(details.country),
       annualBillingAmount: details.annualBillingAmount,
     }
   }
@@ -247,13 +254,15 @@ export class SupplierAdapter {
     const nationalityRaw = dto?.nationality
     const nationality =
       nationalityRaw === undefined || nationalityRaw === null ? undefined : String(nationalityRaw).trim()
+    const rawAge = dto?.age
+    const age = typeof rawAge === 'number' && Number.isFinite(rawAge) && rawAge > 0 ? rawAge : undefined
 
     return {
       id,
       role: this.normalizeText(dto?.role),
       firstName: this.normalizeText(dto?.firstName),
       lastName: this.normalizeText(dto?.lastName),
-      age: this.normalizeNumber(typeof dto?.age === 'number' ? dto.age : 0),
+      ...(age !== undefined ? { age } : {}),
       ...(nationality ? { nationality } : {}),
     }
   }
