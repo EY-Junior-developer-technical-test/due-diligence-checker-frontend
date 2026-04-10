@@ -1,0 +1,95 @@
+{
+  "create": {
+    "title": "Crear proveedor",
+    "subtitle": "Registra el proveedor y, opcionalmente, agrega representantes.",
+    "back": "Volver",
+    "sections": {
+      "supplier": "Datos del proveedor",
+      "representatives": "Representantes"
+    },
+    "fields": {
+      "corporateName": "Razón social",
+      "tradeName": "Nombre comercial",
+      "taxIdentification": "Identificación fiscal (11 dígitos)",
+      "phoneNumber": "Teléfono",
+      "email": "Email",
+      "webSite": "Sitio web",
+      "physicalAddress": "Dirección",
+      "country": "País",
+      "annualBillingAmount": "Facturación anual"
+    },
+    "placeholders": {
+      "country": "Ej: Perú",
+      "nationality": "Selecciona una nacionalidad",
+      "annualBillingAmount": "Ej: 1250000"
+    },
+    "actions": {
+      "addRepresentative": "Añadir representante",
+      "saveRepresentative": "Guardar",
+      "removeRepresentative": "Eliminar",
+      "cancel": "Cancelar",
+      "submit": "Crear proveedor",
+      "submitting": "Creando..."
+    },
+    "representativeFields": {
+      "role": "Rol",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "age": "Edad",
+      "nationality": "Nacionalidad"
+    },
+    "errors": {
+      "required": "Este campo es obligatorio.",
+      "taxId": "Debe tener exactamente 11 dígitos.",
+      "nationality": "Usa un código de país de 2 letras (ej: PE).",
+      "age": "La edad debe ser 18 o mayor.",
+      "amount": "El monto debe ser 0 o mayor.",
+      "createFailed": "No fue posible crear el proveedor."
+    }
+  },
+  "details": {
+    "back": "Volver",
+    "loading": "Cargando proveedor...",
+    "titleFallback": "Proveedor",
+    "description": "Información completa del proveedor {{name}}.",
+    "sections": {
+      "supplier": "Datos del proveedor",
+      "representatives": "Representantes"
+    },
+    "fields": {
+      "corporateName": "Razón social",
+      "tradeName": "Nombre comercial",
+      "taxIdentification": "Identificación fiscal",
+      "phoneNumber": "Teléfono",
+      "email": "Email",
+      "webSite": "Sitio web",
+      "physicalAddress": "Dirección",
+      "country": "País",
+      "annualBillingAmount": "Facturación anual"
+    },
+    "actions": {
+      "addRepresentative": "Añadir representante",
+      "editRepresentative": "Editar proveedor",
+      "saveSupplier": "Guardar",
+      "cancelEdit": "Cancelar"
+    },
+    "deleteRepresentative": {
+      "title": "Eliminar representante",
+      "subtitle": "Esta acción no se puede deshacer.",
+      "metaLabel": "Rol",
+      "actions": {
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "deleting": "Eliminando..."
+      }
+    },
+    "errors": {
+      "missingId": "Falta el id del proveedor.",
+      "loadFailed": "No fue posible cargar el proveedor.",
+      "deleteFailed": "No fue posible eliminar el representante.",
+      "upsertFailed": "No fue posible guardar el representante.",
+      "updateSupplierFailed": "No fue posible actualizar el proveedor.",
+      "tooManyRequests": "Demasiadas solicitudes. Espera un momento e inténtalo nuevamente."
+    }
+  }
+}
