@@ -1,6 +1,6 @@
 import interpolLogo from '../../../assets/interpol-logo-768x768.png'
 import secopLogo from '../../../assets/GovColombiaMultas.png'
-import smvLogo from '../../../assets/OIP.webp'
+import smvLogo from '../../../assets/OIP.png'
 
 import { ScreeningSource } from './screening'
 import type { SourceOption } from './screeningUi'
