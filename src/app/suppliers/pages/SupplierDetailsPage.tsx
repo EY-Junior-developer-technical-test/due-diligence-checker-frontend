@@ -22,10 +22,9 @@ import { RepresentativeModal } from '../components/RepresentativeModal'
 import type { SupplierRepresentative } from '../model/supplier'
 
 export function SupplierDetailsPage() {
-  const { t, i18n } = useTranslation('suppliers')
+  const { t } = useTranslation('suppliers')
   const navigate = useNavigate()
   const { supplierId } = useParams<{ supplierId: string }>()
-  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
 
   const [supplier, setSupplier] = useState<SupplierDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -124,12 +123,12 @@ export function SupplierDetailsPage() {
       return
     }
 
-    const options = getCountryOptions(locale)
+    const options = getCountryOptions('en')
     const countryOption = findCountryOption(supplier.country ?? '', options)
 
     setSupplierDraft({
       ...supplier,
-      country: countryOption?.value ?? supplier.country,
+      country: countryOption?.englishLabel ?? supplier.country,
     })
     setSupplierErrors({})
     setSupplierSubmitError(null)
@@ -356,11 +355,12 @@ export function SupplierDetailsPage() {
 	                      hasError={Boolean(supplierErrors.country)}
 	                      isDisabled={isSupplierSubmitting}
 	                      inputId="supplier-country"
-	                      locale={locale}
+	                      locale="en"
+	                      output="name_en"
 	                    />
 	                  ) : (
 	                    <div className="home-search-input w-full rounded-xl px-4 py-2.5 text-sm text-slate-100">
-	                      <CountryDisplay value={supplier.country ?? ''} locale={locale} />
+	                      <CountryDisplay value={supplier.country ?? ''} locale="en" />
 	                    </div>
 	                  )}
 	                  {supplierErrors.country ? (

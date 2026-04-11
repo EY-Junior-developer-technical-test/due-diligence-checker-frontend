@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { ApiError } from '../../shared/services/ApiError'
-import { CountrySelect } from '../../shared/components/CountrySelect'
+import { CountrySelect, findCountryOption, getCountryOptions } from '../../shared/components/CountrySelect'
 import { supplierService } from '../services/SupplierService'
 import type { SupplierCreateCommand, SupplierRepresentative } from '../model/supplier'
 import { RepresentativeModal } from '../components/RepresentativeModal'
@@ -36,9 +36,9 @@ const REQUIRED_FIELDS: Array<keyof SupplierFormState> = [
 ]
 
 export function CreateSupplierPage() {
-  const { t, i18n } = useTranslation('suppliers')
+  const { t } = useTranslation('suppliers')
   const navigate = useNavigate()
-  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
+  const nationalityOptions = useMemo(() => getCountryOptions('en'), [])
 
   const [form, setForm] = useState<SupplierFormState>({
     corporateName: '',
@@ -222,7 +222,8 @@ export function CreateSupplierPage() {
 	                  placeholder={t('create.placeholders.country')}
 	                  hasError={Boolean(errors.country)}
 	                  inputId="supplier-country"
-	                  locale={locale}
+	                  locale="en"
+	                  output="name_en"
 	                />
 	                {errors.country ? <p className="mt-1 text-xs font-medium text-red-200">{errors.country}</p> : null}
 	              </div>
@@ -292,7 +293,19 @@ export function CreateSupplierPage() {
                         {representative.firstName} {representative.lastName}
                       </p>
                       <p className="mt-1 text-sm text-slate-300">
-                        {[representative.role, representative.age, representative.nationality]
+                        {[
+                          representative.role,
+                          representative.age,
+                          (() => {
+                            const raw = representative.nationality?.trim() ?? ''
+                            if (!raw) {
+                              return ''
+                            }
+
+                            const match = findCountryOption(raw, nationalityOptions)
+                            return match?.englishLabel ?? raw
+                          })(),
+                        ]
                           .filter((value) => value !== undefined && value !== null && String(value).trim().length > 0)
                           .join(' · ')}
                       </p>
