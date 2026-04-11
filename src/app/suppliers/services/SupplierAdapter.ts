@@ -6,6 +6,7 @@ import type {
   SupplierRepresentativeCreateRequestDto,
   SupplierUpdateRequestDto,
 } from '../model/supplier.dto'
+import countries from 'i18n-iso-countries'
 import type {
   Supplier,
   SupplierCreateCommand,
@@ -21,7 +22,44 @@ const DEFAULT_VALUE = '-'
 export class SupplierAdapter {
   private static normalizeCountry(value: string) {
     const trimmed = value.trim()
-    return trimmed.length === 2 ? trimmed.toUpperCase() : trimmed
+    if (!trimmed) {
+      return trimmed
+    }
+
+    const upper = trimmed.toUpperCase()
+    const alpha2 =
+      /^[A-Z]{2}$/.test(upper) ? upper : /^[A-Z]{3}$/.test(upper) ? (countries.alpha3ToAlpha2(upper) ?? '') : ''
+
+    if (!/^[A-Z]{2}$/.test(alpha2)) {
+      return trimmed
+    }
+
+    return countries.getName(alpha2, 'en', { select: 'official' }) ?? trimmed
+  }
+
+  private static normalizeNationality(value: string | undefined) {
+    const trimmed = value?.trim()
+    if (!trimmed) {
+      return undefined
+    }
+
+    const upper = trimmed.toUpperCase()
+    if (/^[A-Z]{2}$/.test(upper)) {
+      const name = countries.getName(upper, 'en', { select: 'official' })
+      return name ?? upper
+    }
+
+    if (/^[A-Z]{3}$/.test(upper)) {
+      const alpha2 = countries.alpha3ToAlpha2(upper)
+      if (!alpha2) {
+        return upper
+      }
+
+      const name = countries.getName(alpha2, 'en', { select: 'official' })
+      return name ?? upper
+    }
+
+    return trimmed
   }
 
   static toQueryDto(query: SupplierSearchQuery): SupplierQueryRequestDto {
@@ -44,7 +82,7 @@ export class SupplierAdapter {
       country: this.normalizeCountry(command.country),
       annualBillingAmount: command.annualBillingAmount,
       representatives: command.representatives?.map((representative) => {
-        const normalizedNationality = representative.nationality?.trim().toUpperCase()
+        const normalizedNationality = this.normalizeNationality(representative.nationality)
         const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
         return {
@@ -61,7 +99,7 @@ export class SupplierAdapter {
   static toRepresentativeUpsertRequestDto(
     representative: SupplierRepresentative,
   ): SupplierRepresentativeCreateRequestDto {
-    const normalizedNationality = representative.nationality?.trim().toUpperCase()
+    const normalizedNationality = this.normalizeNationality(representative.nationality)
     const age = typeof representative.age === 'number' && Number.isFinite(representative.age) ? representative.age : undefined
 
     return {

@@ -41,7 +41,7 @@
     "errors": {
       "required": "Este campo es obligatorio.",
       "taxId": "Debe tener exactamente 11 dígitos.",
-      "nationality": "Usa un código de país de 2 letras (ej: PE).",
+      "nationality": "Selecciona una nacionalidad válida.",
       "age": "La edad debe ser 18 o mayor.",
       "amount": "El monto debe ser 0 o mayor.",
       "createFailed": "No fue posible crear el proveedor."

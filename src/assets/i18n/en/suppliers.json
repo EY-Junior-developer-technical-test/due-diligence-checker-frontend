@@ -41,13 +41,12 @@
     "errors": {
       "required": "This field is required.",
       "taxId": "Must be exactly 11 digits.",
-      "nationality": "Use a 2-letter country code (e.g. PE).",
+      "nationality": "Select a valid nationality.",
       "age": "Age must be 18 or greater.",
       "amount": "Amount must be 0 or greater.",
       "createFailed": "Unable to create the supplier."
     }
-  }
-  ,
+  },
   "details": {
     "back": "Back",
     "loading": "Loading supplier...",

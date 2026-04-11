@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { FiX } from 'react-icons/fi'
 import { useTranslation } from 'react-i18next'
 
-import { CountrySelect } from '../../shared/components/CountrySelect'
+import { CountrySelect, findCountryOption, getCountryOptions } from '../../shared/components/CountrySelect'
 import type { SupplierRepresentative } from '../model/supplier'
 
 type RepresentativeModalProps = {
@@ -38,8 +38,8 @@ export function RepresentativeModal({
   closeOnSubmit = true,
   isSubmitting = false,
 }: RepresentativeModalProps) {
-  const { t, i18n } = useTranslation('suppliers')
-  const locale = i18n.resolvedLanguage === 'en' ? 'en' : 'es'
+  const { t } = useTranslation('suppliers')
+  const options = useMemo(() => getCountryOptions('en'), [])
   const panelRef = useRef<HTMLDivElement | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -53,7 +53,7 @@ export function RepresentativeModal({
   const [errors, setErrors] = useState<RepresentativeFormErrors>({})
   const [touched, setTouched] = useState<RepresentativeFormTouched>({})
 
-  const normalizedNationality = useMemo(() => form.nationality.trim().toUpperCase(), [form.nationality])
+  const normalizedNationality = useMemo(() => form.nationality.trim(), [form.nationality])
 
   useEffect(() => {
     if (!isOpen) {
@@ -92,7 +92,7 @@ export function RepresentativeModal({
       firstName: initialRepresentative?.firstName ?? '',
       lastName: initialRepresentative?.lastName ?? '',
       age: typeof initialRepresentative?.age === 'number' ? String(initialRepresentative.age) : '',
-      nationality: initialRepresentative?.nationality ?? '',
+      nationality: initialRepresentative?.nationality?.trim() ?? '',
     })
     setErrors({})
     setTouched({})
@@ -121,7 +121,7 @@ export function RepresentativeModal({
         return
       }
 
-      if (!/^[A-Z]{2}$/.test(trimmedValue.toUpperCase())) {
+      if (!findCountryOption(trimmedValue, options)) {
         return t('create.errors.nationality')
       }
     }
@@ -305,7 +305,8 @@ export function RepresentativeModal({
 	              hasError={Boolean(errors.nationality)}
 	              isDisabled={isSubmitting}
 	              inputId="representative-nationality"
-	              locale={locale}
+	              locale="en"
+	              output="name_en"
 	            />
 	            {errors.nationality ? (
 	              <p className="mt-1 text-xs font-medium text-red-200">{errors.nationality}</p>
