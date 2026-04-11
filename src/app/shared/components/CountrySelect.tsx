@@ -6,12 +6,25 @@ import esLocale from 'i18n-iso-countries/langs/es.json'
 export type CountryOption = {
   value: string
   label: string
+  alpha2: string
+  englishLabel: string
 }
 
 countries.registerLocale(enLocale)
 countries.registerLocale(esLocale)
 
 const OPTIONS_CACHE = new Map<string, CountryOption[]>()
+let ENGLISH_NAMES_CACHE: Record<string, string> | null = null
+
+function getEnglishNames() {
+  if (ENGLISH_NAMES_CACHE) {
+    return ENGLISH_NAMES_CACHE
+  }
+
+  const names = countries.getNames('en', { select: 'official' }) as Record<string, string>
+  ENGLISH_NAMES_CACHE = names
+  return names
+}
 
 export function getCountryOptions(locale: 'en' | 'es') {
   const cached = OPTIONS_CACHE.get(locale)
@@ -20,9 +33,19 @@ export function getCountryOptions(locale: 'en' | 'es') {
   }
 
   const names = countries.getNames(locale, { select: 'official' }) as Record<string, string>
+  const englishNames = getEnglishNames()
   const options = Object.entries(names)
     .filter(([code]) => /^[A-Z]{2}$/.test(code))
-    .map(([code, label]) => ({ value: code, label }))
+    .map(([code, label]) => {
+      const alpha3 = countries.alpha2ToAlpha3(code)
+      if (!alpha3) {
+        return null
+      }
+
+      const englishLabel = englishNames[code] ?? label
+      return { value: alpha3, label, alpha2: code, englishLabel }
+    })
+    .filter((option): option is CountryOption => option !== null)
     .sort((a, b) => a.label.localeCompare(b.label))
 
   OPTIONS_CACHE.set(locale, options)
@@ -44,22 +67,47 @@ export function findCountryOption(value: string, options: CountryOption[]) {
   }
 
   const asCode = trimmed.toUpperCase()
-  const matchByCode = options.find((option) => option.value.toUpperCase() === asCode)
-  if (matchByCode) {
-    return matchByCode
+  const matchByValue = options.find((option) => option.value.toUpperCase() === asCode)
+  if (matchByValue) {
+    return matchByValue
+  }
+
+  if (/^[A-Z]{2}$/.test(asCode)) {
+    const asAlpha3 = countries.alpha2ToAlpha3(asCode)
+    if (asAlpha3) {
+      const matchByAlpha2 = options.find((option) => option.value.toUpperCase() === asAlpha3)
+      if (matchByAlpha2) {
+        return matchByAlpha2
+      }
+    }
+
+    const matchLegacyAlpha2 = options.find((option) => option.alpha2.toUpperCase() === asCode)
+    if (matchLegacyAlpha2) {
+      return matchLegacyAlpha2
+    }
   }
 
   const normalized = normalizeCountryText(trimmed)
-  return options.find((option) => normalizeCountryText(option.label) === normalized) ?? null
+  return (
+    options.find((option) => normalizeCountryText(option.label) === normalized) ??
+    options.find((option) => normalizeCountryText(option.englishLabel) === normalized) ??
+    null
+  )
 }
 
 function toFlagEmoji(code: string) {
   const normalized = code.trim().toUpperCase()
-  if (!/^[A-Z]{2}$/.test(normalized)) {
+  const alpha2 = /^[A-Z]{2}$/.test(normalized)
+    ? normalized
+    : /^[A-Z]{3}$/.test(normalized)
+      ? countries.alpha3ToAlpha2(normalized) ?? ''
+      : ''
+
+  if (!/^[A-Z]{2}$/.test(alpha2)) {
     return ''
   }
 
-  const [firstChar, secondChar] = normalized
+  const [firstChar, secondChar] = alpha2
   const first = 127397 + firstChar.charCodeAt(0)
   const second = 127397 + secondChar.charCodeAt(0)
   return String.fromCodePoint(first, second)
@@ -73,6 +121,7 @@ type CountrySelectProps = {
   hasError?: boolean
   inputId?: string
   locale: 'en' | 'es'
+  output?: 'alpha3' | 'name_en'
 }
 
 export function CountryDisplay({
@@ -94,14 +143,9 @@ export function CountryDisplay({
     return <span className={className}>{value}</span>
   }
 
-  const flag = toFlagEmoji(selected.value)
-
   return (
     <span className={`inline-flex items-center gap-2 ${className ?? ''}`.trim()}>
-      <span aria-hidden="true">{flag}</span>
-      <span>
-        {selected.label} ({selected.value})
-      </span>
+      <span>{selected.label}</span>
     </span>
   )
 }
@@ -114,6 +158,7 @@ export function CountrySelect({
   hasError,
   inputId,
   locale,
+  output = 'alpha3',
 }: CountrySelectProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -135,9 +180,13 @@ export function CountrySelect({
       return value.trim()
     }
 
-    const flag = toFlagEmoji(selected.value)
+    if (output === 'name_en') {
+      return `${selected.englishLabel}`.trim()
+    }
+
+    const flag = toFlagEmoji(selected.alpha2)
     return `${flag} ${selected.label} (${selected.value})`.trim()
-  }, [selected, value])
+  }, [output, selected, value])
 
   useEffect(() => {
     if (!isFocused) {
@@ -176,21 +225,37 @@ export function CountrySelect({
     }
 
     const byText = options.filter((option) => {
-      const labelNormalized = normalizeCountryText(option.label)
-      return labelNormalized.includes(normalized) || option.value.toLowerCase().includes(normalized)
+      const displayLabel = output === 'name_en' ? option.englishLabel : option.label
+      const labelNormalized = normalizeCountryText(displayLabel)
+      const englishNormalized = normalizeCountryText(option.englishLabel)
+      const localizedNormalized = normalizeCountryText(option.label)
+      const codeNormalized = option.value.toLowerCase()
+      const alpha2Normalized = option.alpha2.toLowerCase()
+
+      return (
+        labelNormalized.includes(normalized) ||
+        englishNormalized.includes(normalized) ||
+        localizedNormalized.includes(normalized) ||
+        codeNormalized.includes(normalized) ||
+        alpha2Normalized.includes(normalized)
+      )
     })
 
     return byText.slice(0, 80)
-  }, [options, query])
+  }, [options, output, query])
 
   const formatOptionValue = (option: CountryOption) => {
-    const flag = toFlagEmoji(option.value)
+    if (output === 'name_en') {
+      return `${option.englishLabel}`.trim()
+    }
+
+    const flag = toFlagEmoji(option.alpha2)
     return `${flag} ${option.label} (${option.value})`.trim()
   }
 
   const selectOption = (option: CountryOption) => {
     didSelectRef.current = true
-    onChange(option.value)
+    onChange(output === 'name_en' ? option.englishLabel : option.value)
     setQuery(formatOptionValue(option))
     setIsOpen(false)
     setIsFocused(false)
@@ -206,7 +271,7 @@ export function CountrySelect({
 
     const match = findCountryOption(trimmed, options)
     if (match) {
-      onChange(match.value)
+      onChange(output === 'name_en' ? match.englishLabel : match.value)
     }
   }
 
@@ -282,9 +347,11 @@ export function CountrySelect({
                 }}
               >
                 <span className="truncate">
-                  {toFlagEmoji(option.value)} {option.label}
+                  {output === 'name_en' ? option.englishLabel : `${toFlagEmoji(option.alpha2)} ${option.label}`}
                 </span>
-                <span className="shrink-0 text-xs font-semibold text-slate-300">{option.value}</span>
+                {output === 'alpha3' ? (
+                  <span className="shrink-0 text-xs font-semibold text-slate-300">{option.value}</span>
+                ) : null}
               </button>
             ))}
           </div>

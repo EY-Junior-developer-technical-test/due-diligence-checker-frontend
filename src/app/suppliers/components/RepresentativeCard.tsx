@@ -1,5 +1,6 @@
 import { FiEdit2, FiTrash2 } from 'react-icons/fi'
 
+import { findCountryOption, getCountryOptions } from '../../shared/components/CountrySelect'
 import type { SupplierRepresentativeRecord } from '../model/supplier'
 
 type RepresentativeCardProps = {
@@ -9,10 +10,20 @@ type RepresentativeCardProps = {
 }
 
 export function RepresentativeCard({ representative, onEdit, onDelete }: RepresentativeCardProps) {
+  const formattedNationality = (() => {
+    const raw = representative.nationality?.trim() ?? ''
+    if (!raw) {
+      return ''
+    }
+
+    const match = findCountryOption(raw, getCountryOptions('en'))
+    return match?.englishLabel ?? raw
+  })()
+
   const metaParts = [
     representative.role,
     typeof representative.age === 'number' ? String(representative.age) : '',
-    representative.nationality,
+    formattedNationality,
   ].filter((value) => typeof value === 'string' && value.trim().length > 0)
 
   return (
